@@ -1,43 +1,79 @@
-# Astro Starter Kit: Minimal
+# 📚 Data Peminjaman Perpustakaan
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Sistem Manajemen Data Peminjaman Perpustakaan yang modern dan responsif, dibangun dengan teknologi web terbaru untuk efisiensi dan kemudahan penggunaan.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🚀 Teknologi yang Digunakan
 
-## 🚀 Project Structure
+Proyek ini dibangun menggunakan stack teknologi berikut:
 
-Inside of your Astro project, you'll see the following folders and files:
+- **Framework**: [Astro](https://astro.build/) - Framework web modern untuk performa tinggi.
+- **UI Library**: [Preact](https://preactjs.com/) - Alternatif ringan untuk React.
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utility-first.
+- **Icons**: [Lucide Preact](https://lucide.dev/) - Set ikon yang indah dan konsisten.
+- **State Management**: [@preact/signals](https://preactjs.com/guide/v10/signals/) - Manajemen state yang reaktif dan performan.
+
+## ✨ Fitur Utama
+
+- **Dashboard**: Ringkasan data dan statistik peminjaman.
+- **Manajemen Buku**:
+  - Penambahan, pengeditan, dan penghapusan data buku.
+  - Pencarian dan filter buku.
+- **Manajemen Peminjam (Borrowers)**:
+  - Data anggota atau peminjam.
+  - Riwayat peminjaman siswa/anggota.
+- **Sistem Peminjaman (Loans)**:
+  - Pencatatan transaksi peminjaman dan pengembalian.
+  - Tracking status buku.
+
+## 📂 Struktur Proyek
 
 ```text
 /
-├── public/
+├── public/           # Aset statis
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── components/   # Komponen UI (Preact)
+│   │   ├── books/    # Komponen manajemen buku
+│   │   ├── borrowers/# Komponen manajemen peminjam
+│   │   ├── dashboard/# Komponen dashboard
+│   │   ├── layout/   # Layout utama (Sidebar, Header)
+│   │   ├── loans/    # Komponen transaksi peminjaman
+│   │   └── ui/       # Komponen UI reusable (Button, Input, dll)
+│   ├── layouts/      # Layout halaman Astro
+│   ├── pages/        # Halaman routing Astro
+│   ├── stores/       # Global state (Signals)
+│   └── styles/       # CSS global
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🛠️ Cara Menjalankan
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Ikuti langkah-langkah berikut untuk menjalankan proyek di komputer lokal Anda:
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. **Clone repositori** (jika belum):
 
-## 🧞 Commands
+   ```bash
+   git clone <repository-url>
+   cd data-peminjaman
+   ```
 
-All commands are run from the root of the project, from a terminal:
+2. **Instal dependensi**:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+   ```bash
+   npm install
+   ```
 
-## 👀 Want to learn more?
+3. **Jalankan server development**:
+   ```bash
+   npm run dev
+   ```
+   Aplikasi akan dapat diakses di `http://localhost:4321`.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📜 Perintah Lainnya
+
+| Perintah          | Deskripsi                                                 |
+| :---------------- | :-------------------------------------------------------- |
+| `npm run build`   | Membangun aplikasi untuk produksi ke folder `./dist/`     |
+| `npm run preview` | Melihat preview hasil build secara lokal                  |
+| `npm run astro`   | Menjalankan CLI Astro (misal: `astro add`, `astro check`) |
+
+---
