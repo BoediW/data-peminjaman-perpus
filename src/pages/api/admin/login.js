@@ -1,10 +1,14 @@
+export const prerender = false;
+
 export const POST = async ({ request }) => {
   try {
     const { username, password } = await request.json();
-    const envUser = import.meta.env.username || process.env.username; // Astro env vars or generic process.env
-    const envPass = import.meta.env.password || process.env.password;
 
-    // Validation against environment variables
+    const envUser =
+      import.meta.env.ADMIN_USERNAME || process.env.ADMIN_USERNAME;
+    const envPass =
+      import.meta.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+
     if (username === envUser && password === envPass) {
       return new Response(
         JSON.stringify({

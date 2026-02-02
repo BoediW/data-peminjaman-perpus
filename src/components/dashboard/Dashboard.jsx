@@ -1,3 +1,4 @@
+import { useState, useEffect } from "preact/hooks";
 import {
   BookOpen,
   Users,
@@ -8,6 +9,7 @@ import {
   Library,
   ArrowRight,
   Clock,
+  Loader2,
 } from "lucide-preact";
 import {
   dashboardStats,
@@ -16,6 +18,7 @@ import {
   borrowers,
   formatDate,
   getLoanDetails,
+  activeTab,
 } from "../../stores/libraryStore";
 
 function StatCard({ icon: Icon, label, value, color, trend }) {
@@ -70,7 +73,10 @@ function RecentLoansTable() {
           <Clock class="w-5 h-5 text-primary-500" />
           Peminjaman Terbaru
         </h3>
-        <button class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1 transition-colors">
+        <button
+          onClick={() => (activeTab.value = "loans")}
+          class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1 transition-colors"
+        >
           Lihat Semua <ArrowRight class="w-4 h-4" />
         </button>
       </div>
@@ -118,16 +124,18 @@ function RecentLoansTable() {
                 </td>
                 <td class="px-6 py-4">
                   <span
-                    class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${loan.status === "overdue"
+                    class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
+                      loan.status === "overdue"
                         ? "bg-red-50 text-red-700 border-red-100"
                         : "bg-emerald-50 text-emerald-700 border-emerald-100"
-                      }`}
+                    }`}
                   >
                     <span
-                      class={`w-1.5 h-1.5 rounded-full mr-1.5 ${loan.status === "overdue"
+                      class={`w-1.5 h-1.5 rounded-full mr-1.5 ${
+                        loan.status === "overdue"
                           ? "bg-red-500"
                           : "bg-emerald-500"
-                        }`}
+                      }`}
                     ></span>
                     {loan.status === "overdue" ? "Terlambat" : "Dipinjam"}
                   </span>
@@ -175,14 +183,15 @@ function PopularBooks() {
             >
               <div
                 class={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0 relative overflow-hidden
-              ${index === 0
-                    ? "bg-amber-500 text-white"
-                    : index === 1
-                      ? "bg-slate-400 text-white"
-                      : index === 2
-                        ? "bg-orange-400 text-white"
-                        : "bg-gray-100 text-gray-500"
-                  }`}
+              ${
+                index === 0
+                  ? "bg-amber-500 text-white"
+                  : index === 1
+                    ? "bg-slate-400 text-white"
+                    : index === 2
+                      ? "bg-orange-400 text-white"
+                      : "bg-gray-100 text-gray-500"
+              }`}
               >
                 {index + 1}
               </div>
@@ -191,7 +200,9 @@ function PopularBooks() {
                   {book.judul}
                 </p>
                 <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
-                  <span class="truncate max-w-[120px]">{book.penerbit || "-"}</span>
+                  <span class="truncate max-w-[120px]">
+                    {book.penerbit || "-"}
+                  </span>
                   <span class="w-1 h-1 rounded-full bg-gray-300"></span>
                   <span class="font-semibold text-primary-600 bg-primary-50 px-1.5 rounded-md">
                     {borrowed} dipinjam
@@ -212,7 +223,41 @@ function PopularBooks() {
 }
 
 export default function Dashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const stats = dashboardStats.value;
+
+  useEffect(() => {
+    // Cek apakah user sudah login
+    const token = localStorage.getItem("adminToken");
+    const adminUser = localStorage.getItem("adminUser");
+
+    if (!token || !adminUser) {
+      // Jika belum login, redirect ke halaman login
+      window.location.href = "/";
+      return;
+    }
+
+    setIsAuthenticated(true);
+    setIsLoading(false);
+  }, []);
+
+  // Tampilkan loading saat mengecek autentikasi
+  if (isLoading) {
+    return (
+      <div class="min-h-screen flex items-center justify-center bg-gray-50">
+        <div class="text-center">
+          <Loader2 class="w-10 h-10 text-primary-500 animate-spin mx-auto mb-4" />
+          <p class="text-gray-600 font-medium">Memverifikasi autentikasi...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Jika tidak terautentikasi, jangan render apapun (sudah redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div class="space-y-8 animate-fade-in pb-8">

@@ -159,7 +159,7 @@ export default function AdminNavbar({
             <button
               onClick={() => {
                 localStorage.removeItem("adminUser");
-                window.location.href = "/site/private/admin/login";
+                window.location.href = "/";
               }}
               className="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 gap-3 font-medium group"
             >
