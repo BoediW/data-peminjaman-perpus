@@ -3,24 +3,23 @@ import {
   BookPlus,
   Save,
   X,
-  Tag,
+  User,
   Building2,
   Hash,
   Calendar,
   Layers,
   CheckCircle,
 } from "lucide-preact";
-import { addBook, categories } from "../../stores/libraryStore";
-import Dropdown from "../ui/Dropdown";
+import { addBook } from "../../stores/libraryStore";
 
 export default function AddBookForm() {
   const [formData, setFormData] = useState({
-    title: "",
-    code: "",
-    publisher: "",
-    category: "",
-    year: new Date().getFullYear(),
-    stock: 1,
+    kode_buku: "",
+    judul: "",
+    penulis: "",
+    penerbit: "",
+    tahun_terbit: new Date().getFullYear(),
+    stok_total: 1,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -30,7 +29,7 @@ export default function AddBookForm() {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "stock" || name === "year" ? parseInt(value) || 0 : value,
+        name === "stok_total" || name === "tahun_terbit" ? parseInt(value) || 0 : value,
     }));
   };
 
@@ -38,26 +37,34 @@ export default function AddBookForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      // Map form data to match store's expected format
+      await addBook({
+        code: formData.kode_buku,
+        title: formData.judul,
+        author: formData.penulis,
+        publisher: formData.penerbit,
+        year: formData.tahun_terbit,
+        stock: formData.stok_total,
+      });
 
-    addBook(formData);
-
-    setShowSuccess(true);
-    setFormData({
-      title: "",
-      code: "",
-      publisher: "",
-      category: "",
-      year: new Date().getFullYear(),
-      stock: 1,
-    });
-    setIsSubmitting(false);
-
-    setTimeout(() => setShowSuccess(false), 3000);
+      setShowSuccess(true);
+      setFormData({
+        kode_buku: "",
+        judul: "",
+        penulis: "",
+        penerbit: "",
+        tahun_terbit: new Date().getFullYear(),
+        stok_total: 1,
+      });
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error("Failed to add book", error);
+      alert("Gagal menambahkan buku: " + error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-
-  const existingCategories = categories.value.filter((c) => c !== "all");
 
   return (
     <div class="w-full animate-fade-in pb-10">
@@ -84,35 +91,17 @@ export default function AddBookForm() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} class="card p-6 space-y-6">
-        {/* Book Title */}
-        <div>
-          <label class="label" for="title">
-            <BookPlus class="w-4 h-4 inline mr-2 text-gray-500" />
-            Nama Buku
-          </label>
-          <input
-            id="title"
-            type="text"
-            name="title"
-            value={formData.title}
-            onInput={handleInputChange}
-            placeholder="Masukkan nama buku..."
-            class="input"
-            required
-          />
-        </div>
-
         {/* Book Code */}
         <div>
-          <label class="label" for="code">
+          <label class="label" for="kode_buku">
             <Hash class="w-4 h-4 inline mr-2 text-gray-500" />
             Kode Buku
           </label>
           <input
-            id="code"
+            id="kode_buku"
             type="text"
-            name="code"
-            value={formData.code}
+            name="kode_buku"
+            value={formData.kode_buku}
             onInput={handleInputChange}
             placeholder="Contoh: NOV-001, PLJ-002"
             class="input font-mono"
@@ -123,85 +112,95 @@ export default function AddBookForm() {
           </p>
         </div>
 
+        {/* Book Title */}
+        <div>
+          <label class="label" for="judul">
+            <BookPlus class="w-4 h-4 inline mr-2 text-gray-500" />
+            Judul Buku
+          </label>
+          <input
+            id="judul"
+            type="text"
+            name="judul"
+            value={formData.judul}
+            onInput={handleInputChange}
+            placeholder="Masukkan judul buku..."
+            class="input"
+            required
+          />
+        </div>
+
+        {/* Author */}
+        <div>
+          <label class="label" for="penulis">
+            <User class="w-4 h-4 inline mr-2 text-gray-500" />
+            Penulis
+          </label>
+          <input
+            id="penulis"
+            type="text"
+            name="penulis"
+            value={formData.penulis}
+            onInput={handleInputChange}
+            placeholder="Nama penulis..."
+            class="input"
+          />
+        </div>
+
         {/* Publisher */}
         <div>
-          <label class="label" for="publisher">
+          <label class="label" for="penerbit">
             <Building2 class="w-4 h-4 inline mr-2 text-gray-500" />
             Penerbit
           </label>
           <input
-            id="publisher"
+            id="penerbit"
             type="text"
-            name="publisher"
-            value={formData.publisher}
+            name="penerbit"
+            value={formData.penerbit}
             onInput={handleInputChange}
             placeholder="Nama penerbit..."
             class="input"
-            required
           />
         </div>
 
-        {/* Category & Year Row */}
+        {/* Year & Stock Row */}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Category */}
-          <div>
-            <Dropdown
-              label="Kategori"
-              name="category"
-              value={formData.category}
-              onChange={(val) =>
-                setFormData((prev) => ({ ...prev, category: val }))
-              }
-              options={[
-                ...existingCategories,
-                "Novel",
-                "Pelajaran",
-                "Referensi",
-                "Komik",
-                "Majalah",
-              ].filter((v, i, a) => a.indexOf(v) === i)} // Unique values
-              placeholder="Pilih kategori..."
-              icon={Tag}
-              required
-            />
-          </div>
-
           {/* Year */}
           <div>
-            <label class="label" for="year">
+            <label class="label" for="tahun_terbit">
               <Calendar class="w-4 h-4 inline mr-2 text-gray-500" />
               Tahun Terbit
             </label>
             <input
-              id="year"
+              id="tahun_terbit"
               type="number"
-              name="year"
-              value={formData.year}
+              name="tahun_terbit"
+              value={formData.tahun_terbit}
               onInput={handleInputChange}
               min="1900"
               max={new Date().getFullYear()}
               class="input"
+            />
+          </div>
+
+          {/* Stock */}
+          <div>
+            <label class="label" for="stok_total">
+              <Layers class="w-4 h-4 inline mr-2 text-gray-500" />
+              Jumlah Stok
+            </label>
+            <input
+              id="stok_total"
+              type="number"
+              name="stok_total"
+              value={formData.stok_total}
+              onInput={handleInputChange}
+              min="1"
+              class="input"
               required
             />
           </div>
-        </div>
-
-        {/* Stock */}
-        <div>
-          <label class="label" for="stock">
-            <Layers class="w-4 h-4 inline mr-2 text-gray-500" />
-            Jumlah Stok
-          </label>
-          <input
-            id="stock"
-            type="number"
-            name="stock"
-            value={formData.stock}
-            onInput={handleInputChange}
-            min="1"
-            class="input"
-            required
-          />
         </div>
 
         {/* Info Card */}
@@ -248,12 +247,12 @@ export default function AddBookForm() {
             type="button"
             onClick={() =>
               setFormData({
-                title: "",
-                code: "",
-                publisher: "",
-                category: "",
-                year: new Date().getFullYear(),
-                stock: 1,
+                kode_buku: "",
+                judul: "",
+                penulis: "",
+                penerbit: "",
+                tahun_terbit: new Date().getFullYear(),
+                stok_total: 1,
               })
             }
             class="btn btn-ghost"

@@ -13,7 +13,6 @@ import {
 } from "lucide-preact";
 import {
   loans,
-  borrowers,
   books,
   borrowBook,
   searchBorrower,
@@ -33,11 +32,11 @@ function LoanModal({ isOpen, onClose }) {
     borrowerSearch.length > 1 ? searchBorrower(borrowerSearch) : [];
 
   const availableBooks = books.value.filter((book) => {
-    const available = book.stock - book.borrowed > 0;
+    const available = (book.stok_tersedia || 0) > 0;
     const matchesSearch =
-      book.title.toLowerCase().includes(bookSearch.toLowerCase()) ||
-      book.code.toLowerCase().includes(bookSearch.toLowerCase()) ||
-      book.publisher.toLowerCase().includes(bookSearch.toLowerCase());
+      book.judul?.toLowerCase().includes(bookSearch.toLowerCase()) ||
+      book.kode_buku?.toLowerCase().includes(bookSearch.toLowerCase()) ||
+      book.penerbit?.toLowerCase().includes(bookSearch.toLowerCase());
     return available && (bookSearch === "" || matchesSearch);
   });
 
@@ -50,10 +49,10 @@ function LoanModal({ isOpen, onClose }) {
     setSelectedBook(book);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedBorrower || !selectedBook) return;
 
-    const result = borrowBook(selectedBorrower.id, selectedBook.id);
+    const result = await borrowBook(selectedBorrower.nisn, selectedBook.kode_buku);
 
     if (result.success) {
       setMessage({ type: "success", text: "Peminjaman berhasil dicatat!" });
@@ -125,7 +124,7 @@ function LoanModal({ isOpen, onClose }) {
             <span
               class={`font-medium ${step >= 1 ? "text-primary-800" : "text-gray-500"}`}
             >
-              Pilih Peminjam
+              Pilih Siswa
             </span>
             <div class="w-8 h-px bg-gray-300 mx-1"></div>
             <div
@@ -164,7 +163,7 @@ function LoanModal({ isOpen, onClose }) {
                 <Search class="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Cari nama siswa atau NIS..."
+                  placeholder="Cari nama siswa atau NISN..."
                   value={borrowerSearch}
                   onInput={(e) => setBorrowerSearch(e.target.value)}
                   class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 transition-all outline-none"
@@ -175,25 +174,25 @@ function LoanModal({ isOpen, onClose }) {
               <div class="space-y-2 mt-2">
                 {searchResults.length > 0 ? (
                   <div class="grid grid-cols-1 gap-2">
-                    {searchResults.map((borrower) => (
+                    {searchResults.map((siswa) => (
                       <button
-                        key={borrower.id}
-                        onClick={() => handleSelectBorrower(borrower)}
+                        key={siswa.nisn}
+                        onClick={() => handleSelectBorrower(siswa)}
                         class="w-full p-3 rounded-xl border border-gray-100 hover:border-primary-200 hover:bg-primary-50/50 hover:shadow-sm transition-all flex items-center gap-4 text-left group"
                       >
                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-700 font-bold group-hover:scale-105 transition-transform shadow-inner">
-                          {borrower.name.charAt(0)}
+                          {siswa.nama_siswa?.charAt(0) || "?"}
                         </div>
                         <div class="flex-1">
                           <p class="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
-                            {borrower.name}
+                            {siswa.nama_siswa}
                           </p>
                           <div class="flex items-center gap-2 mt-0.5">
                             <span class="text-xs font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
-                              Kelas {borrower.class}
+                              Kelas {siswa.kelas}
                             </span>
                             <span class="text-xs text-gray-400">
-                              NIS: {borrower.nis}
+                              NISN: {siswa.nisn}
                             </span>
                           </div>
                         </div>
@@ -232,7 +231,7 @@ function LoanModal({ isOpen, onClose }) {
                       </>
                     ) : (
                       <p class="text-gray-400 text-sm">
-                        Ketik nama atau NIS untuk mulai mencari...
+                        Ketik nama atau NISN untuk mulai mencari...
                       </p>
                     )}
                   </div>
@@ -246,14 +245,14 @@ function LoanModal({ isOpen, onClose }) {
               <div class="bg-gradient-to-r from-primary-50 to-white border border-primary-100 p-4 rounded-xl flex items-center justify-between shadow-sm">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-full bg-white border-2 border-primary-100 flex items-center justify-center text-primary-700 font-bold shadow-sm">
-                    {selectedBorrower?.name.charAt(0)}
+                    {selectedBorrower?.nama_siswa?.charAt(0) || "?"}
                   </div>
                   <div>
                     <p class="text-xs text-primary-600 font-semibold uppercase tracking-wider mb-0.5">
                       Peminjam
                     </p>
                     <p class="font-bold text-gray-900">
-                      {selectedBorrower?.name}
+                      {selectedBorrower?.nama_siswa}
                     </p>
                   </div>
                 </div>
@@ -283,23 +282,21 @@ function LoanModal({ isOpen, onClose }) {
                 {availableBooks.length > 0 ? (
                   availableBooks.map((book) => (
                     <button
-                      key={book.id}
+                      key={book.kode_buku}
                       onClick={() => handleSelectBook(book)}
                       class={`w-full p-4 rounded-xl border transition-all flex items-start gap-4 text-left group
-                          ${
-                            selectedBook?.id === book.id
-                              ? "border-accent-500 bg-accent-50/50 ring-1 ring-accent-500 shadow-sm"
-                              : "border-gray-100 bg-white hover:border-primary-300 hover:shadow-md"
-                          }`}
+                          ${selectedBook?.kode_buku === book.kode_buku
+                          ? "border-accent-500 bg-accent-50/50 ring-1 ring-accent-500 shadow-sm"
+                          : "border-gray-100 bg-white hover:border-primary-300 hover:shadow-md"
+                        }`}
                     >
                       {/* Book Icon / Cover Placeholder */}
                       <div
                         class={`w-12 h-16 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0 border transition-colors
-                            ${
-                              selectedBook?.id === book.id
-                                ? "bg-white border-accent-200 text-accent-600"
-                                : "bg-gray-50 border-gray-100 text-gray-400 group-hover:bg-primary-50 group-hover:text-primary-500 group-hover:border-primary-100"
-                            }
+                            ${selectedBook?.kode_buku === book.kode_buku
+                            ? "bg-white border-accent-200 text-accent-600"
+                            : "bg-gray-50 border-gray-100 text-gray-400 group-hover:bg-primary-50 group-hover:text-primary-500 group-hover:border-primary-100"
+                          }
                         `}
                       >
                         <BookOpen class="w-6 h-6" />
@@ -309,29 +306,29 @@ function LoanModal({ isOpen, onClose }) {
                       <div class="flex-1 min-w-0 py-0.5">
                         <div class="flex justify-between items-start gap-2">
                           <h4
-                            class={`font-bold text-sm leading-tight transition-colors ${selectedBook?.id === book.id ? "text-gray-900" : "text-gray-900 group-hover:text-primary-700"}`}
+                            class={`font-bold text-sm leading-tight transition-colors ${selectedBook?.kode_buku === book.kode_buku ? "text-gray-900" : "text-gray-900 group-hover:text-primary-700"}`}
                           >
-                            {book.title}
+                            {book.judul}
                           </h4>
-                          {selectedBook?.id === book.id && (
+                          {selectedBook?.kode_buku === book.kode_buku && (
                             <CheckCircle class="w-5 h-5 text-accent-500 flex-shrink-0" />
                           )}
                         </div>
 
                         <div class="flex items-center gap-2 mt-1.5 mb-2">
                           <span class="text-[10px] font-mono font-medium bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
-                            {book.code}
+                            {book.kode_buku}
                           </span>
                           <span class="text-xs text-gray-500 truncate max-w-[150px]">
-                            {book.publisher}
+                            {book.penerbit}
                           </span>
                         </div>
 
                         <div class="flex items-center text-xs">
                           <span
-                            class={`font-medium ${selectedBook?.id === book.id ? "text-accent-700" : "text-green-600"}`}
+                            class={`font-medium ${selectedBook?.kode_buku === book.kode_buku ? "text-accent-700" : "text-green-600"}`}
                           >
-                            Stok: {book.stock - book.borrowed}
+                            Stok: {book.stok_tersedia}
                           </span>
                         </div>
                       </div>
@@ -412,6 +409,7 @@ export default function LoanList() {
   );
 
   const filteredLoans = allLoansWithDetails.filter((loan) => {
+    if (!loan) return false;
     if (filter === "all") return true;
     if (filter === "active") return loan.status === "active";
     if (filter === "overdue") return loan.status === "overdue";
@@ -425,7 +423,7 @@ export default function LoanList() {
         return (
           <span class="badge badge-success">
             <Clock class="w-3 h-3 mr-1" />
-            Aktif
+            Dipinjam
           </span>
         );
       case "overdue":
@@ -471,7 +469,7 @@ export default function LoanList() {
       <div class="flex flex-wrap gap-2">
         {[
           { id: "all", label: "Semua" },
-          { id: "active", label: "Aktif" },
+          { id: "active", label: "Dipinjam" },
           { id: "overdue", label: "Terlambat" },
           { id: "returned", label: "Dikembalikan" },
         ].map((f) => (
@@ -479,10 +477,9 @@ export default function LoanList() {
             key={f.id}
             onClick={() => setFilter(f.id)}
             class={`px-4 py-2 rounded-full text-sm font-medium transition-all
-              ${
-                filter === f.id
-                  ? "bg-primary-800 text-white"
-                  : "bg-white text-gray-600 border border-base-300 hover:bg-base-100"
+              ${filter === f.id
+                ? "bg-primary-800 text-white"
+                : "bg-white text-gray-600 border border-base-300 hover:bg-base-100"
               }`}
           >
             {f.label}
@@ -499,17 +496,17 @@ export default function LoanList() {
                 <th>Peminjam</th>
                 <th>Buku</th>
                 <th>Tgl Pinjam</th>
-                <th>Tgl Kembali</th>
+                <th>Tenggat</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {filteredLoans.map((loan) => (
+              {filteredLoans.map((loan) => loan && (
                 <tr key={loan.id} class="hover:bg-base-100 transition-colors">
                   <td>
                     <div class="flex items-center gap-3">
                       <div class="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm">
-                        {loan.borrower?.name.charAt(0)}
+                        {loan.borrower?.name?.charAt(0) || "?"}
                       </div>
                       <div>
                         <p class="font-medium text-gray-900">

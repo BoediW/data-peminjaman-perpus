@@ -6,8 +6,6 @@ import {
   GraduationCap,
   BookOpen,
   MoreVertical,
-  Mail,
-  Phone,
 } from "lucide-preact";
 import {
   borrowers,
@@ -16,7 +14,7 @@ import {
 } from "../../stores/libraryStore";
 
 function BorrowerCard({ borrower }) {
-  const activeLoans = getActiveLoansByBorrower(borrower.id);
+  const activeLoans = getActiveLoansByBorrower(borrower.nisn);
 
   return (
     <div class="card p-5 hover:border-primary-200 transition-all duration-200 group">
@@ -24,16 +22,16 @@ function BorrowerCard({ borrower }) {
         <div class="flex items-center gap-4">
           {/* Avatar */}
           <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-105 transition-transform">
-            {borrower.name.charAt(0)}
+            {borrower.nama_siswa?.charAt(0) || "?"}
           </div>
           <div>
             <h3 class="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
-              {borrower.name}
+              {borrower.nama_siswa}
             </h3>
             <div class="flex items-center gap-2 mt-1">
               <span class="badge badge-info">
                 <GraduationCap class="w-3 h-3 mr-1" />
-                Kelas {borrower.class}
+                Kelas {borrower.kelas}
               </span>
             </div>
           </div>
@@ -44,11 +42,11 @@ function BorrowerCard({ borrower }) {
         </button>
       </div>
 
-      {/* NIS */}
+      {/* NISN */}
       <div class="flex items-center gap-2 text-sm text-gray-600 mb-4 px-1">
-        <span class="font-medium text-gray-500">NIS:</span>
+        <span class="font-medium text-gray-500">NISN:</span>
         <span class="font-mono bg-base-200 px-2 py-0.5 rounded">
-          {borrower.nis}
+          {borrower.nisn}
         </span>
       </div>
 
@@ -80,12 +78,12 @@ function BorrowerCard({ borrower }) {
 export default function BorrowerList() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredBorrowers = borrowers.value.filter((borrower) => {
+  const filteredBorrowers = borrowers.value.filter((siswa) => {
     const query = searchQuery.toLowerCase();
     return (
-      borrower.name.toLowerCase().includes(query) ||
-      borrower.nis.includes(query) ||
-      borrower.class.toLowerCase().includes(query)
+      siswa.nama_siswa?.toLowerCase().includes(query) ||
+      siswa.nisn?.includes(query) ||
+      siswa.kelas?.toLowerCase().includes(query)
     );
   });
 
@@ -96,7 +94,7 @@ export default function BorrowerList() {
         <div>
           <h1 class="section-title">
             <Users class="w-7 h-7 text-primary-600" />
-            Data Peminjam
+            Data Siswa
           </h1>
           <p class="text-gray-500 -mt-4 ml-10">
             Daftar siswa yang terdaftar sebagai peminjam
@@ -108,7 +106,7 @@ export default function BorrowerList() {
           class="btn btn-accent"
         >
           <UserPlus class="w-5 h-5" />
-          Tambah Peminjam
+          Tambah Siswa
         </button>
       </div>
 
@@ -118,7 +116,7 @@ export default function BorrowerList() {
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Cari nama, NIS, atau kelas..."
+            placeholder="Cari nama, NISN, atau kelas..."
             value={searchQuery}
             onInput={(e) => setSearchQuery(e.target.value)}
             class="input pl-12"
@@ -129,7 +127,7 @@ export default function BorrowerList() {
       {/* Stats */}
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
-          <p class="text-sm text-blue-600 font-medium">Total Peminjam</p>
+          <p class="text-sm text-blue-600 font-medium">Total Siswa</p>
           <p class="text-2xl font-bold text-blue-800">
             {borrowers.value.length}
           </p>
@@ -137,19 +135,19 @@ export default function BorrowerList() {
         <div class="bg-green-50 rounded-xl p-4 border border-green-100">
           <p class="text-sm text-green-600 font-medium">Kelas 7</p>
           <p class="text-2xl font-bold text-green-800">
-            {borrowers.value.filter((b) => b.class.startsWith("7")).length}
+            {borrowers.value.filter((b) => b.kelas?.startsWith("7")).length}
           </p>
         </div>
         <div class="bg-purple-50 rounded-xl p-4 border border-purple-100">
           <p class="text-sm text-purple-600 font-medium">Kelas 8</p>
           <p class="text-2xl font-bold text-purple-800">
-            {borrowers.value.filter((b) => b.class.startsWith("8")).length}
+            {borrowers.value.filter((b) => b.kelas?.startsWith("8")).length}
           </p>
         </div>
         <div class="bg-orange-50 rounded-xl p-4 border border-orange-100">
           <p class="text-sm text-orange-600 font-medium">Kelas 9</p>
           <p class="text-2xl font-bold text-orange-800">
-            {borrowers.value.filter((b) => b.class.startsWith("9")).length}
+            {borrowers.value.filter((b) => b.kelas?.startsWith("9")).length}
           </p>
         </div>
       </div>
@@ -158,14 +156,14 @@ export default function BorrowerList() {
       {filteredBorrowers.length > 0 ? (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBorrowers.map((borrower) => (
-            <BorrowerCard key={borrower.id} borrower={borrower} />
+            <BorrowerCard key={borrower.nisn} borrower={borrower} />
           ))}
         </div>
       ) : (
         <div class="empty-state py-16">
           <Users class="w-16 h-16 text-gray-300 mb-4" />
           <h3 class="text-lg font-medium text-gray-600 mb-2">
-            Tidak ada peminjam ditemukan
+            Tidak ada siswa ditemukan
           </h3>
           <p class="text-gray-400">Coba ubah kata kunci pencarian</p>
         </div>

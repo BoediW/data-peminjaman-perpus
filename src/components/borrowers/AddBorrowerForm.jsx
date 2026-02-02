@@ -13,9 +13,9 @@ import Dropdown from "../ui/Dropdown";
 
 export default function AddBorrowerForm() {
   const [formData, setFormData] = useState({
-    name: "",
-    class: "",
-    nis: "",
+    nisn: "",
+    nama_siswa: "",
+    kelas: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -47,20 +47,26 @@ export default function AddBorrowerForm() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      await addBorrower({
+        nisn: formData.nisn,
+        name: formData.nama_siswa,
+        class: formData.kelas,
+      });
 
-    addBorrower(formData);
-
-    setShowSuccess(true);
-    setFormData({
-      name: "",
-      class: "",
-      nis: "",
-    });
-    setIsSubmitting(false);
-
-    setTimeout(() => setShowSuccess(false), 3000);
+      setShowSuccess(true);
+      setFormData({
+        nisn: "",
+        nama_siswa: "",
+        kelas: "",
+      });
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error("Failed to add borrower", error);
+      alert("Gagal menambahkan siswa: " + error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -69,7 +75,7 @@ export default function AddBorrowerForm() {
       <div class="mb-6">
         <h1 class="section-title">
           <UserPlus class="w-7 h-7 text-primary-600" />
-          Tambah Peminjam Baru
+          Tambah Siswa Baru
         </h1>
         <p class="text-gray-500 -mt-4 ml-10">
           Daftarkan siswa baru sebagai anggota perpustakaan
@@ -81,24 +87,42 @@ export default function AddBorrowerForm() {
         <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 animate-slide-up">
           <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
           <p class="text-green-800 font-medium">
-            Peminjam berhasil didaftarkan!
+            Siswa berhasil didaftarkan!
           </p>
         </div>
       )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} class="card p-6 space-y-6">
+        {/* NISN */}
+        <div>
+          <label class="label" for="nisn">
+            <Hash class="w-4 h-4 inline mr-2 text-gray-500" />
+            NISN (Nomor Induk Siswa Nasional)
+          </label>
+          <input
+            id="nisn"
+            type="text"
+            name="nisn"
+            value={formData.nisn}
+            onInput={handleInputChange}
+            placeholder="Contoh: 0012345678"
+            class="input font-mono"
+            required
+          />
+        </div>
+
         {/* Name */}
         <div>
-          <label class="label" for="name">
+          <label class="label" for="nama_siswa">
             <User class="w-4 h-4 inline mr-2 text-gray-500" />
             Nama Lengkap
           </label>
           <input
-            id="name"
+            id="nama_siswa"
             type="text"
-            name="name"
-            value={formData.name}
+            name="nama_siswa"
+            value={formData.nama_siswa}
             onInput={handleInputChange}
             placeholder="Masukkan nama lengkap siswa..."
             class="input"
@@ -106,41 +130,20 @@ export default function AddBorrowerForm() {
           />
         </div>
 
-        {/* Class & NIS Row */}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Class */}
-          <div>
-            <Dropdown
-              label="Kelas"
-              name="class"
-              value={formData.class}
-              onChange={(val) =>
-                setFormData((prev) => ({ ...prev, class: val }))
-              }
-              options={classOptions}
-              placeholder="Pilih kelas..."
-              icon={GraduationCap}
-              required
-            />
-          </div>
-
-          {/* NIS */}
-          <div>
-            <label class="label" for="nis">
-              <Hash class="w-4 h-4 inline mr-2 text-gray-500" />
-              NIS (Nomor Induk Siswa)
-            </label>
-            <input
-              id="nis"
-              type="text"
-              name="nis"
-              value={formData.nis}
-              onInput={handleInputChange}
-              placeholder="Contoh: 2024001"
-              class="input"
-              required
-            />
-          </div>
+        {/* Class */}
+        <div>
+          <Dropdown
+            label="Kelas"
+            name="kelas"
+            value={formData.kelas}
+            onChange={(val) =>
+              setFormData((prev) => ({ ...prev, kelas: val }))
+            }
+            options={classOptions}
+            placeholder="Pilih kelas..."
+            icon={GraduationCap}
+            required
+          />
         </div>
 
         {/* Info Card */}
@@ -151,7 +154,7 @@ export default function AddBorrowerForm() {
           </h4>
           <ul class="text-sm text-blue-700 space-y-1">
             <li>
-              • Pastikan NIS tidak duplikat dengan siswa yang sudah terdaftar
+              • Pastikan NISN tidak duplikat dengan siswa yang sudah terdaftar
             </li>
             <li>• Nama yang dimasukkan akan ditampilkan di kartu anggota</li>
             <li>• Setelah terdaftar, siswa dapat langsung meminjam buku</li>
@@ -173,13 +176,13 @@ export default function AddBorrowerForm() {
             ) : (
               <>
                 <Save class="w-5 h-5" />
-                Daftarkan Peminjam
+                Daftarkan Siswa
               </>
             )}
           </button>
           <button
             type="button"
-            onClick={() => setFormData({ name: "", class: "", nis: "" })}
+            onClick={() => setFormData({ nisn: "", nama_siswa: "", kelas: "" })}
             class="btn btn-ghost"
           >
             <X class="w-5 h-5" />
