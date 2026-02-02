@@ -85,7 +85,6 @@ export default function AdminNavbar({
           <Menu className="w-5 h-5 transition-transform group-hover:scale-110" />
         </button>
 
-        {/* Breadcrumb / Title Placeholder */}
         <h2
           class={`text-lg font-display font-bold text-gray-800 transition-opacity duration-300 ${isScrolled ? "opacity-100" : "opacity-0 hidden sm:block"}`}
         >
