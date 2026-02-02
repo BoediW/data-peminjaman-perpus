@@ -11,6 +11,7 @@ import {
   BookMarked,
   Hash,
   Calendar,
+  User,
 } from "lucide-preact";
 import {
   filteredBooks,
@@ -20,9 +21,21 @@ import {
   activeTab,
 } from "../../stores/libraryStore";
 
-function BookCard({ book }) {
-  const available = book.stock - book.borrowed;
+function BookCard({ book, index }) {
+  // Use fields from 'buku' table
+  const available = book.stok_tersedia || 0;
+  const total = book.stok_total || 0;
   const isAvailable = available > 0;
+
+  // Derive category from kode_buku
+  const getCategory = (code) => {
+    if (!code) return "Lainnya";
+    if (code.startsWith("NOV")) return "Novel";
+    if (code.startsWith("PLJ")) return "Pelajaran";
+    if (code.startsWith("REF")) return "Referensi";
+    if (code.startsWith("KOM")) return "Komik";
+    return "Lainnya";
+  };
 
   const handleBorrow = () => {
     activeTab.value = "loans";
@@ -31,12 +44,12 @@ function BookCard({ book }) {
   return (
     <div
       class="card group overflow-hidden animate-slide-up"
-      style={{ animationDelay: `${book.id * 50}ms` }}
+      style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Card Header with Category */}
       <div class="bg-gradient-to-r from-primary-800 to-primary-700 px-4 py-3 flex items-center justify-between">
         <span class="text-white text-xs font-medium px-2.5 py-1 bg-white/20 rounded-full backdrop-blur-sm">
-          {book.category}
+          {getCategory(book.kode_buku)}
         </span>
         <span
           class={`flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full
@@ -62,25 +75,33 @@ function BookCard({ book }) {
         <div class="flex items-center gap-2 mb-3">
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 text-primary-700 rounded-lg text-sm font-mono font-semibold">
             <Hash class="w-4 h-4" />
-            {book.code}
+            {book.kode_buku}
           </span>
         </div>
 
         {/* Title */}
-        <h3 class="font-display font-bold text-lg text-gray-900 mb-3 line-clamp-2 group-hover:text-primary-700 transition-colors min-h-[3.5rem]">
-          {book.title}
+        <h3 class="font-display font-bold text-lg text-gray-900 mb-1 line-clamp-2 group-hover:text-primary-700 transition-colors min-h-[3.5rem]">
+          {book.judul}
         </h3>
+
+        {/* Author */}
+        {book.penulis && (
+          <div class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <User class="w-4 h-4 text-gray-400" />
+            {book.penulis}
+          </div>
+        )}
 
         {/* Publisher */}
         <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
           <Building2 class="w-4 h-4 text-gray-400" />
-          <span class="truncate">{book.publisher}</span>
+          <span class="truncate">{book.penerbit || "-"}</span>
         </div>
 
         {/* Year */}
         <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
           <Calendar class="w-4 h-4 text-gray-400" />
-          <span>Tahun {book.year}</span>
+          <span>Tahun {book.tahun_terbit || "-"}</span>
         </div>
 
         {/* Stock Info */}
@@ -89,7 +110,7 @@ function BookCard({ book }) {
             <BookOpen class="w-4 h-4 text-gray-400" />
             <span class="text-sm text-gray-600">
               Stok: <span class="font-semibold text-gray-900">{available}</span>{" "}
-              / {book.stock}
+              / {total}
             </span>
           </div>
         </div>
@@ -97,14 +118,13 @@ function BookCard({ book }) {
         {/* Progress Bar */}
         <div class="mt-3 h-2 bg-base-200 rounded-full overflow-hidden">
           <div
-            class={`h-full rounded-full transition-all duration-500 ${
-              available === 0
-                ? "bg-red-500"
-                : available < book.stock * 0.3
-                  ? "bg-amber-500"
-                  : "bg-green-500"
-            }`}
-            style={{ width: `${(available / book.stock) * 100}%` }}
+            class={`h-full rounded-full transition-all duration-500 ${available === 0
+              ? "bg-red-500"
+              : available < total * 0.3
+                ? "bg-amber-500"
+                : "bg-green-500"
+              }`}
+            style={{ width: `${total > 0 ? (available / total) * 100 : 0}%` }}
           ></div>
         </div>
 
@@ -134,10 +154,9 @@ function CategoryFilter() {
           key={cat}
           onClick={() => (selectedCategory.value = cat)}
           class={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
-            ${
-              selectedCategory.value === cat
-                ? "bg-primary-800 text-white shadow-md"
-                : "bg-white text-gray-600 hover:bg-base-200 border border-base-300"
+            ${selectedCategory.value === cat
+              ? "bg-primary-800 text-white shadow-md"
+              : "bg-white text-gray-600 hover:bg-base-200 border border-base-300"
             }`}
         >
           {cat === "all" ? "Semua" : cat}
@@ -178,7 +197,7 @@ export default function BookCatalog() {
             <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Cari judul buku, kode buku, atau penerbit..."
+              placeholder="Cari judul buku, kode buku, penulis, atau penerbit..."
               value={searchQuery.value}
               onInput={(e) => (searchQuery.value = e.target.value)}
               class="input pl-12"
@@ -205,8 +224,8 @@ export default function BookCatalog() {
       {/* Books Grid */}
       {booksData.length > 0 ? (
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {booksData.map((book) => (
-            <BookCard key={book.id} book={book} />
+          {booksData.map((book, index) => (
+            <BookCard key={book.kode_buku} book={book} index={index} />
           ))}
         </div>
       ) : (

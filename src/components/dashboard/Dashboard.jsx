@@ -60,7 +60,8 @@ function StatCard({ icon: Icon, label, value, color, trend }) {
 function RecentLoansTable() {
   const recentLoans = activeLoans.value
     .slice(0, 5)
-    .map((loan) => getLoanDetails(loan.id));
+    .map((loan) => getLoanDetails(loan.id))
+    .filter(Boolean);
 
   return (
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-full flex flex-col">
@@ -117,20 +118,18 @@ function RecentLoansTable() {
                 </td>
                 <td class="px-6 py-4">
                   <span
-                    class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
-                      loan.status === "overdue"
+                    class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${loan.status === "overdue"
                         ? "bg-red-50 text-red-700 border-red-100"
                         : "bg-emerald-50 text-emerald-700 border-emerald-100"
-                    }`}
+                      }`}
                   >
                     <span
-                      class={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                        loan.status === "overdue"
+                      class={`w-1.5 h-1.5 rounded-full mr-1.5 ${loan.status === "overdue"
                           ? "bg-red-500"
                           : "bg-emerald-500"
-                      }`}
+                        }`}
                     ></span>
-                    {loan.status === "overdue" ? "Terlambat" : "Aktif"}
+                    {loan.status === "overdue" ? "Terlambat" : "Dipinjam"}
                   </span>
                 </td>
               </tr>
@@ -151,8 +150,13 @@ function RecentLoansTable() {
 }
 
 function PopularBooks() {
+  // Sort by (stok_total - stok_tersedia) to get most borrowed
   const popularBooks = [...books.value]
-    .sort((a, b) => b.borrowed - a.borrowed)
+    .sort((a, b) => {
+      const borrowedA = (a.stok_total || 0) - (a.stok_tersedia || 0);
+      const borrowedB = (b.stok_total || 0) - (b.stok_tersedia || 0);
+      return borrowedB - borrowedA;
+    })
     .slice(0, 5);
 
   return (
@@ -162,39 +166,41 @@ function PopularBooks() {
         Buku Populer
       </h3>
       <div class="space-y-4 flex-1">
-        {popularBooks.map((book, index) => (
-          <div
-            key={book.id}
-            class="flex items-center gap-4 p-3 rounded-xl hover:bg-auth-50 border border-transparent hover:border-gray-100 hover:shadow-sm transition-all duration-200 group cursor-default"
-          >
+        {popularBooks.map((book, index) => {
+          const borrowed = (book.stok_total || 0) - (book.stok_tersedia || 0);
+          return (
             <div
-              class={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0 relative overflow-hidden
-              ${
-                index === 0
-                  ? "bg-amber-500 text-white"
-                  : index === 1
-                    ? "bg-slate-400 text-white"
-                    : index === 2
-                      ? "bg-orange-400 text-white"
-                      : "bg-gray-100 text-gray-500"
-              }`}
+              key={book.kode_buku}
+              class="flex items-center gap-4 p-3 rounded-xl hover:bg-auth-50 border border-transparent hover:border-gray-100 hover:shadow-sm transition-all duration-200 group cursor-default"
             >
-              {index + 1}
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-bold text-sm text-gray-900 truncate group-hover:text-primary-700 transition-colors">
-                {book.title}
-              </p>
-              <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
-                <span class="truncate max-w-[120px]">{book.publisher}</span>
-                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                <span class="font-semibold text-primary-600 bg-primary-50 px-1.5 rounded-md">
-                  {book.borrowed}
-                </span>
+              <div
+                class={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0 relative overflow-hidden
+              ${index === 0
+                    ? "bg-amber-500 text-white"
+                    : index === 1
+                      ? "bg-slate-400 text-white"
+                      : index === 2
+                        ? "bg-orange-400 text-white"
+                        : "bg-gray-100 text-gray-500"
+                  }`}
+              >
+                {index + 1}
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-bold text-sm text-gray-900 truncate group-hover:text-primary-700 transition-colors">
+                  {book.judul}
+                </p>
+                <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
+                  <span class="truncate max-w-[120px]">{book.penerbit || "-"}</span>
+                  <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                  <span class="font-semibold text-primary-600 bg-primary-50 px-1.5 rounded-md">
+                    {borrowed} dipinjam
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {popularBooks.length === 0 && (
           <div class="text-center py-8 text-gray-400 text-sm">
             Belum ada data buku
@@ -244,11 +250,10 @@ export default function Dashboard() {
           label="Buku Tersedia"
           value={stats.availableBooks}
           color="green"
-          trend="+5 minggu ini"
         />
         <StatCard
           icon={Users}
-          label="Jumlah Peminjam"
+          label="Jumlah Siswa"
           value={stats.totalBorrowers}
           color="purple"
         />

@@ -8,7 +8,6 @@ import {
   Calendar,
   Clock,
   AlertTriangle,
-  ArrowRight,
 } from "lucide-preact";
 import {
   activeLoans,
@@ -16,7 +15,6 @@ import {
   returnBook,
   formatDate,
   getLoanDetails,
-  isOverdue,
 } from "../../stores/libraryStore";
 
 export default function ReturnBook() {
@@ -28,17 +26,17 @@ export default function ReturnBook() {
   // Get active loans with full details
   const activeLoansWithDetails = activeLoans.value.map((loan) =>
     getLoanDetails(loan.id),
-  );
+  ).filter(Boolean);
 
   // Filter loans based on search
   const filteredLoans = activeLoansWithDetails.filter((loan) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
-      loan.borrower?.name.toLowerCase().includes(query) ||
-      loan.borrower?.nis.includes(query) ||
-      loan.book?.title.toLowerCase().includes(query) ||
-      loan.book?.code.toLowerCase().includes(query)
+      loan.borrower?.name?.toLowerCase().includes(query) ||
+      loan.borrower?.nisn?.includes(query) ||
+      loan.book?.title?.toLowerCase().includes(query) ||
+      loan.book?.code?.toLowerCase().includes(query)
     );
   });
 
@@ -46,10 +44,7 @@ export default function ReturnBook() {
     setIsProcessing(true);
     setSelectedLoan(loan.id);
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    const result = returnBook(loan.id);
+    const result = await returnBook(loan.id);
 
     if (result.success) {
       setMessage({
@@ -83,11 +78,10 @@ export default function ReturnBook() {
       {message.text && (
         <div
           class={`p-4 rounded-xl flex items-center gap-3 animate-slide-up
-          ${
-            message.type === "success"
+          ${message.type === "success"
               ? "bg-green-50 border border-green-200 text-green-800"
               : "bg-red-50 border border-red-200 text-red-800"
-          }`}
+            }`}
         >
           {message.type === "success" ? (
             <CheckCircle2 class="w-5 h-5 text-green-600" />
@@ -104,7 +98,7 @@ export default function ReturnBook() {
           <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Cari nama peminjam, NIS, atau judul buku..."
+            placeholder="Cari nama peminjam, NISN, atau judul buku..."
             value={searchQuery}
             onInput={(e) => setSearchQuery(e.target.value)}
             class="input pl-12"
@@ -179,7 +173,7 @@ export default function ReturnBook() {
                     {/* Borrower Info */}
                     <div class="flex items-center gap-2 mb-2">
                       <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm">
-                        {loan.borrower?.name.charAt(0)}
+                        {loan.borrower?.name?.charAt(0) || "?"}
                       </div>
                       <div>
                         <p class="font-medium text-gray-900 text-sm">
@@ -206,7 +200,7 @@ export default function ReturnBook() {
                         class={`flex items-center gap-1 ${loan.status === "overdue" ? "text-red-600 font-medium" : ""}`}
                       >
                         <Clock class="w-3.5 h-3.5" />
-                        Batas: {formatDate(loan.dueDate)}
+                        Tenggat: {formatDate(loan.dueDate)}
                       </span>
                     </div>
 
@@ -220,7 +214,7 @@ export default function ReturnBook() {
                       ) : (
                         <span class="badge badge-success">
                           <Clock class="w-3 h-3 mr-1" />
-                          Aktif
+                          Dipinjam
                         </span>
                       )}
 
