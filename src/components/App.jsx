@@ -30,7 +30,7 @@ export default function App() {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
 
   return (
-    <div class="flex h-screen w-full bg-base-100 overflow-hidden">
+    <div class="flex h-screen w-full overflow-hidden">
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div

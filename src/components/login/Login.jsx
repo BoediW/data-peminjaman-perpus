@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { User, Lock, Eye, EyeOff, AlertTriangle } from "lucide-preact";
+import { User, Lock, Eye, EyeOff, AlertTriangle, Music, Mic2, Disc } from "lucide-preact";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -91,137 +91,124 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#C3DDF8] px-4 py-12 relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div
-          className="absolute -left-16 top-12 h-64 w-64 rounded-full bg-blue-200/40 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-sky-200/50 blur-3xl"
-          aria-hidden
-        />
+    <div className="min-h-screen w-full flex items-center justify-center bg-nerissa-onyx px-4 py-12 relative overflow-hidden">
+      {/* Melodic Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 right-10 w-96 h-96 bg-nerissa-teal/10 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-nerissa-purple/10 rounded-full blur-[120px]"></div>
+
+        {/* Sound Waves Decoration */}
+        <div className="absolute bottom-0 left-0 w-full h-1/3 opacity-20 sound-wave"></div>
+
+        {/* Decorative Icons */}
+        <div className="absolute top-1/4 left-10 text-nerissa-teal/20 animate-float">
+          <Music size={120} />
+        </div>
+        <div className="absolute bottom-1/4 right-10 text-nerissa-purple/20 animate-float" style={{ animationDelay: '1s' }}>
+          <Disc size={100} />
+        </div>
       </div>
-      <div className="max-w-md w-full backdrop-blur-sm rounded-2xl p-8 transform transition-all duration-300">
-        <div className="text-center mb-8">
-          <div className="relative mb-6">
-            <img
-              src="/assets/img/navbar.png"
-              alt="Logo"
-              width={120}
-              height={120}
-              className="mx-auto rounded-full"
-            />
+
+      <div className="max-w-md w-full relative z-10 animate-fade-in px-4">
+        <div className="card-cyber bg-nerissa-midnight/60 backdrop-blur-2xl p-8 md:p-10 border border-white/10 rounded-nerissa-lg shadow-nerissa-lg relative overflow-hidden">
+          {/* Accent Line */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-nerissa-teal via-nerissa-purple to-nerissa-teal"></div>
+
+          <div className="text-center mb-10">
+            <div className="w-24 h-24 bg-gradient-to-tr from-nerissa-teal/20 to-nerissa-purple/20 border border-nerissa-teal/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse-cyan">
+              <Mic2 className="w-10 h-10 text-nerissa-teal" />
+            </div>
+            <h1 className="text-3xl font-display font-black text-white mb-2 tracking-tight italic">
+              Selamat Datang
+            </h1>
+            <p className="text-gray-400 text-xs font-medium uppercase tracking-[0.2em]">
+              Sistem Manajemen Perpustakaan
+            </p>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Selamat Datang
-          </h1>
-          <p className="text-[var(--foreground)] text-sm">
-            Masuk untuk memantau aktivitas baca dan manajemen buku setiap hari
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-1">
+              <label className="label">Username</label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-nerissa-teal transition-colors w-5 h-5" />
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onInput={(e) => setUsername(e.target.value)}
+                  className="input pl-12 h-14"
+                  placeholder="Masukkan username Anda"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="label">Kata Sandi</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-nerissa-teal transition-colors w-5 h-5" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onInput={(e) => setPassword(e.target.value)}
+                  className="input pl-12 pr-12 h-14"
+                  placeholder="********"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center">
+              <label className="relative flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-nerissa-teal transition-all"></div>
+                  <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-5"></div>
+                </div>
+                <span className="text-sm text-gray-400 group-hover:text-gray-200">Ingat saya</span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-full h-14 text-sm tracking-widest uppercase shadow-nerissa hover:scale-[1.02] active:scale-95 group overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-0 transition-transform"></div>
+              <span className="relative z-10 flex items-center gap-3">
+                Masuk <Music size={18} className="animate-bounce" />
+              </span>
+            </button>
+          </form>
+
+          <p className="mt-8 text-center text-xs text-gray-500 font-medium">
+            ID: <span className="text-nerissa-teal/60">SMP Negeri 3 Archive</span>
           </p>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="relative">
-            <label
-              htmlFor="username"
-              className="block text-sm font-semibold text-[var(--foreground)] mb-2"
-            >
-              Username
-            </label>
-            <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(sanitizeInput(e.target.value))}
-                required
-                className="pl-12 pr-4 py-3 w-full border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--btn)] focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                placeholder="Masukkan username Anda"
-              />
-            </div>
-          </div>
-
-          <div className="relative">
-            <label
-              htmlFor="password"
-              className="block text-sm font-semibold text-[var(--foreground)] mb-2"
-            >
-              Kata Sandi
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(sanitizeInput(e.target.value))}
-                required
-                className="pl-12 pr-12 py-3 w-full border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--btn)] focus:border-transparent transition-all duration-200 bg-gray-50/50 hover:bg-white"
-                placeholder="Masukkan kata sandi"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors duration-200"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 text-[var(--btn)] focus:ring-[var(--btn)] border-gray-300 rounded"
-            />
-            <label
-              htmlFor="remember-me"
-              className="ml-2 block text-sm text-[var(--foreground)]"
-            >
-              Ingat saya
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-[#F67F5F] text-white py-3 px-4 rounded-xl font-semibold transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F67F5F] cursor-pointer"
-          >
-            Masuk
-          </button>
-        </form>
       </div>
+
+      {/* Snackbar Alert */}
       <div
-        className={`fixed top-6 left-1/2 -translate-x-1/2 transform transition-all duration-500 z-50 ${
-          snackbarVisible
-            ? "translate-y-0 opacity-100 scale-100"
-            : "-translate-y-6 opacity-0 scale-95"
-        } ${
-          snackbar?.type === "success"
-            ? "bg-gradient-to-r from-emerald-500 to-emerald-600 border-emerald-400"
-            : snackbar?.type === "error"
-              ? "bg-gradient-to-r from-rose-500 to-rose-600 border-rose-400"
-              : "bg-gradient-to-r from-gray-500 to-gray-600 border-gray-400"
-        } text-white px-6 py-4 rounded-2xl shadow-2xl border-2 pointer-events-none max-w-sm`}
-        aria-live="assertive"
+        className={`fixed top-8 left-1/2 -translate-x-1/2 transition-all duration-500 z-50 px-8 py-4 rounded-full border shadow-nerissa-lg flex items-center gap-4
+        ${snackbarVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-12 opacity-0 scale-95 pointer-events-none"}
+        ${snackbar?.type === "success"
+            ? "bg-nerissa-teal text-nerissa-onyx border-white/20"
+            : "bg-red-500/90 text-white border-white/20"}`}
       >
-        <div className="flex items-center gap-3">
-          {snackbar?.type === "error" && (
-            <AlertTriangle className="w-5 h-5 flex-shrink-0" />
-          )}
-          <div className="font-medium text-sm leading-relaxed">
-            {snackbar?.message}
-          </div>
-        </div>
+        {snackbar?.type === "error" ? <AlertTriangle size={20} /> : <div className="w-5 h-5 flex-shrink-0"><Mic2 size={20} /></div>}
+        <p className="font-display font-bold text-sm">{snackbar?.message}</p>
       </div>
     </div>
   );

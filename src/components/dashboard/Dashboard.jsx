@@ -10,6 +10,10 @@ import {
   ArrowRight,
   Clock,
   Loader2,
+  Music,
+  Mic2,
+  Disc,
+  Sparkles
 } from "lucide-preact";
 import {
   dashboardStats,
@@ -23,38 +27,45 @@ import {
 
 function StatCard({ icon: Icon, label, value, color, trend }) {
   const colorClasses = {
-    blue: "bg-blue-50 text-blue-600 border-blue-100",
-    green: "bg-green-50 text-green-600 border-green-100",
-    orange: "bg-orange-50 text-orange-600 border-orange-100",
-    red: "bg-red-50 text-red-600 border-red-100",
-    purple: "bg-purple-50 text-purple-600 border-purple-100",
-    teal: "bg-teal-50 text-teal-600 border-teal-100",
+    blue: "from-nerissa-teal/10 to-nerissa-teal/5 text-nerissa-teal border-nerissa-teal/20 shadow-nerissa-teal/10",
+    green: "from-emerald-500/10 to-emerald-500/5 text-emerald-400 border-emerald-500/20 shadow-emerald-500/10",
+    orange: "from-nerissa-gold/10 to-nerissa-gold/5 text-nerissa-gold border-nerissa-gold/20 shadow-nerissa-gold/10",
+    red: "from-red-500/10 to-red-500/5 text-red-400 border-red-500/20 shadow-red-500/10",
+    purple: "from-nerissa-purple/10 to-nerissa-purple/5 text-nerissa-purple border-nerissa-purple/20 shadow-nerissa-purple/10",
+    teal: "from-cyan-400/10 to-cyan-400/5 text-cyan-400 border-cyan-400/20 shadow-cyan-400/10",
   };
 
   return (
-    <div class="group relative bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 overflow-hidden">
-      <div class="relative z-10 flex items-start justify-between">
-        <div>
-          <div class="flex items-center gap-2 mb-2">
-            <div class={`p-2 rounded-lg ${colorClasses[color]} bg-opacity-50`}>
-              <Icon class="w-5 h-5" />
-            </div>
-            <p class="text-sm font-medium text-gray-500">{label}</p>
-          </div>
+    <div className={`group relative bg-gradient-to-br ${colorClasses[color]} backdrop-blur-md rounded-nerissa-lg p-7 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}>
+      {/* Wave Decoration */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-          <div class="flex items-baseline gap-2">
-            <h3 class="text-3xl font-display font-bold text-gray-900 tracking-tight">
-              {value}
-            </h3>
+      <div className="relative z-10">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="w-12 h-12 rounded-nerissa bg-nerissa-onyx/40 flex items-center justify-center border border-white/5 shadow-inner transition-transform group-hover:rotate-12">
+            <Icon className="w-6 h-6" />
           </div>
-
-          {trend && (
-            <div class="flex items-center gap-1.5 mt-3 text-xs font-medium text-green-600 bg-green-50 w-fit px-2 py-1 rounded-full border border-green-100">
-              <TrendingUp class="w-3 h-3" />
-              <span>{trend}</span>
-            </div>
-          )}
+          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 leading-none">{label}</p>
         </div>
+
+        <div className="flex items-baseline gap-3">
+          <h3 className="text-4xl font-display font-black tracking-tight text-white">
+            {value}
+          </h3>
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-30">Total Units</span>
+        </div>
+
+        {trend && (
+          <div className="flex items-center gap-2 mt-5 text-[10px] font-black text-white/40 bg-white/5 w-fit px-3 py-1 rounded-full border border-white/5">
+            <TrendingUp className="w-3 h-3 text-nerissa-teal" />
+            <span className="uppercase tracking-[0.1em]">{trend}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Background Decorative Icon */}
+      <div className="absolute -right-4 -bottom-4 opacity-[0.03] rotate-[-15deg] group-hover:scale-125 transition-transform duration-700 pointer-events-none">
+        <Icon className="w-32 h-32" />
       </div>
     </div>
   );
@@ -67,76 +78,65 @@ function RecentLoansTable() {
     .filter(Boolean);
 
   return (
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden h-full flex flex-col">
-      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-        <h3 class="font-display font-bold text-lg text-gray-900 flex items-center gap-2">
-          <Clock class="w-5 h-5 text-primary-500" />
+    <div className="card h-full flex flex-col border-white/5 shadow-2xl overflow-hidden bg-nerissa-midnight/40 backdrop-blur-xl">
+      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
+        <h3 className="font-display font-black text-xl text-white flex items-center gap-4 tracking-tight">
+          <Clock className="w-6 h-6 text-nerissa-teal animate-pulse" />
           Peminjaman Terbaru
         </h3>
         <button
           onClick={() => (activeTab.value = "loans")}
-          class="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1 transition-colors"
+          className="btn btn-ghost btn-sm group text-[10px] font-black tracking-widest uppercase hover:text-nerissa-teal"
         >
-          Lihat Semua <ArrowRight class="w-4 h-4" />
+          Lihat Semua <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
-      <div class="overflow-x-auto flex-1">
-        <table class="w-full text-left">
-          <thead class="bg-gray-50/50">
+      <div className="overflow-x-auto flex-1 p-2 relative">
+        <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
+        <table className="table">
+          <thead>
             <tr>
-              <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Peminjam
-              </th>
-              <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Buku
-              </th>
-              <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
+              <th>Peminjam</th>
+              <th>Buku</th>
+              <th>Status</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-100">
+          <tbody>
             {recentLoans.map((loan) => (
-              <tr
-                key={loan.id}
-                class="hover:bg-gray-50/50 transition-colors group"
-              >
-                <td class="px-6 py-4">
-                  <div>
-                    <p class="font-semibold text-gray-900 text-sm">
-                      {loan.borrower?.name}
-                    </p>
-                    <p class="text-xs text-gray-500 mt-0.5 font-medium bg-gray-100 w-fit px-1.5 py-0.5 rounded">
-                      Kelas {loan.borrower?.class}
-                    </p>
+              <tr key={loan.id} className="group transition-colors">
+                <td className="px-6 py-5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-9 h-9 border border-white/10 bg-nerissa-onyx/40 flex items-center justify-center font-bold text-xs text-nerissa-teal rounded-nerissa">
+                      {loan.borrower?.name?.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-bold text-white text-sm tracking-tight capitalize">
+                        {loan.borrower?.name}
+                      </p>
+                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-0.5">
+                        Kelas {loan.borrower?.class}
+                      </p>
+                    </div>
                   </div>
                 </td>
-                <td class="px-6 py-4">
-                  <div class="flex flex-col">
-                    <span class="text-sm font-medium text-gray-700 line-clamp-1 group-hover:text-primary-600 transition-colors">
+                <td className="px-6 py-5">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-gray-300 line-clamp-1 group-hover:text-nerissa-teal transition-colors">
                       {loan.book?.title}
                     </span>
-                    <span class="text-xs text-gray-400 mt-0.5">
+                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest mt-1">
                       {formatDate(loan.borrowDate)}
                     </span>
                   </div>
                 </td>
-                <td class="px-6 py-4">
+                <td className="px-6 py-5">
                   <span
-                    class={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${
-                      loan.status === "overdue"
-                        ? "bg-red-50 text-red-700 border-red-100"
-                        : "bg-emerald-50 text-emerald-700 border-emerald-100"
-                    }`}
-                  >
-                    <span
-                      class={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                        loan.status === "overdue"
-                          ? "bg-red-500"
-                          : "bg-emerald-500"
+                    className={`badge ${loan.status === "overdue" ? "badge-danger" : "badge-success"
                       }`}
-                    ></span>
+                  >
+                    <div className={`w-1.5 h-1.5 rounded-full mr-2 ${loan.status === "overdue" ? "bg-red-500 animate-ping" : "bg-nerissa-teal shadow-nerissa"
+                      }`}></div>
                     {loan.status === "overdue" ? "Terlambat" : "Dipinjam"}
                   </span>
                 </td>
@@ -145,8 +145,11 @@ function RecentLoansTable() {
 
             {recentLoans.length === 0 && (
               <tr>
-                <td colspan="3" class="px-6 py-12 text-center text-gray-500">
-                  Belum ada data peminjaman
+                <td colSpan="3" className="px-6 py-20 text-center">
+                  <div className="flex flex-col items-center gap-4 opacity-10">
+                    <Disc className="w-16 h-16 animate-spin-slow" />
+                    <p className="text-xs font-black uppercase tracking-[0.4em]">Registry Empty</p>
+                  </div>
                 </td>
               </tr>
             )}
@@ -158,7 +161,6 @@ function RecentLoansTable() {
 }
 
 function PopularBooks() {
-  // Sort by (stok_total - stok_tersedia) to get most borrowed
   const popularBooks = [...books.value]
     .sort((a, b) => {
       const borrowedA = (a.stok_total || 0) - (a.stok_tersedia || 0);
@@ -168,44 +170,46 @@ function PopularBooks() {
     .slice(0, 5);
 
   return (
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 h-full flex flex-col">
-      <h3 class="font-display font-bold text-lg text-gray-900 mb-6 flex items-center gap-2">
-        <TrendingUp class="w-5 h-5 text-accent-500" />
-        Buku Populer
-      </h3>
-      <div class="space-y-4 flex-1">
+    <div className="card h-full flex flex-col border-white/5 shadow-2xl overflow-hidden bg-nerissa-midnight/40 backdrop-blur-xl">
+      <div className="p-8 border-b border-white/5 bg-nerissa-teal/5">
+        <h3 className="font-display font-black text-xl text-white flex items-center gap-4 tracking-tight">
+          <TrendingUp className="w-6 h-6 text-nerissa-gold" />
+          Buku Populer
+        </h3>
+      </div>
+      <div className="p-4 space-y-3 flex-1 relative">
+        <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
         {popularBooks.map((book, index) => {
           const borrowed = (book.stok_total || 0) - (book.stok_tersedia || 0);
           return (
             <div
               key={book.kode_buku}
-              class="flex items-center gap-4 p-3 rounded-xl hover:bg-auth-50 border border-transparent hover:border-gray-100 hover:shadow-sm transition-all duration-200 group cursor-default"
+              className="flex items-center gap-5 p-4 bg-white/5 border border-transparent hover:border-nerissa-teal/30 rounded-nerissa transition-all duration-300 group cursor-pointer"
             >
               <div
-                class={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0 relative overflow-hidden
-              ${
-                index === 0
-                  ? "bg-amber-500 text-white"
-                  : index === 1
-                    ? "bg-slate-400 text-white"
-                    : index === 2
-                      ? "bg-orange-400 text-white"
-                      : "bg-gray-100 text-gray-500"
-              }`}
+                className={`w-10 h-10 rounded-nerissa flex items-center justify-center font-black text-sm shadow-xl shrink-0 transition-transform group-hover:rotate-12
+              ${index === 0
+                    ? "bg-gradient-to-tr from-nerissa-gold to-yellow-600 text-nerissa-onyx"
+                    : index === 1
+                      ? "bg-gradient-to-tr from-slate-300 to-slate-500 text-nerissa-onyx"
+                      : index === 2
+                        ? "bg-gradient-to-tr from-orange-400 to-orange-600 text-nerissa-onyx"
+                        : "bg-nerissa-onyx text-gray-500 border border-white/5"
+                  }`}
               >
                 {index + 1}
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="font-bold text-sm text-gray-900 truncate group-hover:text-primary-700 transition-colors">
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm text-white truncate group-hover:text-nerissa-teal transition-colors">
                   {book.judul}
                 </p>
-                <div class="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
-                  <span class="truncate max-w-[120px]">
+                <div className="flex items-center gap-3 text-[10px] font-black text-gray-600 uppercase tracking-widest mt-1">
+                  <span className="truncate max-w-[100px] italic">
                     {book.penerbit || "-"}
                   </span>
-                  <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                  <span class="font-semibold text-primary-600 bg-primary-50 px-1.5 rounded-md">
-                    {borrowed} dipinjam
+                  <div className="w-1 h-1 bg-nerissa-teal/30 rounded-full"></div>
+                  <span className="text-nerissa-teal/60">
+                    {borrowed} Dipinjam
                   </span>
                 </div>
               </div>
@@ -213,8 +217,8 @@ function PopularBooks() {
           );
         })}
         {popularBooks.length === 0 && (
-          <div class="text-center py-8 text-gray-400 text-sm">
-            Belum ada data buku
+          <div className="text-center py-20 text-gray-700 font-black uppercase tracking-[0.4em]">
+            No Records
           </div>
         )}
       </div>
@@ -245,50 +249,72 @@ export default function Dashboard() {
   // Tampilkan loading saat mengecek autentikasi
   if (isLoading) {
     return (
-      <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="text-center">
-          <Loader2 class="w-10 h-10 text-primary-500 animate-spin mx-auto mb-4" />
-          <p class="text-gray-600 font-medium">Memverifikasi autentikasi...</p>
+      <div className="min-h-screen flex items-center justify-center bg-nerissa-onyx">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-nerissa-teal animate-spin mx-auto mb-6" />
+          <p className="text-gray-400 font-display font-medium uppercase tracking-[0.3em] animate-pulse">Memverifikasi Sesi...</p>
         </div>
       </div>
     );
   }
 
   // Jika tidak terautentikasi, jangan render apapun (sudah redirect)
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   return (
-    <div class="space-y-8 animate-fade-in pb-8">
+    <div className="space-y-10 animate-fade-in pb-12">
       {/* Welcome Header */}
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#D5E5FE] to-[#E7E5F3] text-slate-800 shadow-xl isolate">
-        <div class="relative z-10 px-8 py-10 sm:px-10 sm:py-12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          <div class="max-w-xl">
-            <h1 class="font-display text-3xl sm:text-4xl font-bold mb-3 tracking-tight text-slate-900">
-              Selamat Datang, Admin{" "}
+      <div className="relative overflow-hidden rounded-nerissa-lg bg-gradient-to-br from-nerissa-midnight to-nerissa-onyx border border-white/10 shadow-nerissa-lg p-1">
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-nerissa-teal/5 to-transparent"></div>
+        <div className="absolute -bottom-10 -right-10 text-[18rem] text-white/5 font-display select-none pointer-events-none">N</div>
+
+        <div className="relative z-10 px-10 py-12 md:px-14 md:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="max-w-xl text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
+              <div className="h-px w-10 bg-nerissa-teal/40"></div>
+              <span className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.4em] leading-none">Status: Melodic</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter text-white uppercase italic">
+              Selamat Datang, Admin
             </h1>
-            <p class="text-slate-600 text-lg leading-relaxed max-w-lg">
-              Kelola data buku, peminjaman, dan anggota perpustakaan SMPN 3
-              Lumajang dengan mudah dan efisien.
+            <p className="text-gray-400 text-lg leading-relaxed max-w-lg font-medium tracking-tight">
+              Kelola data buku, peminjaman, dan anggota perpustakaan <span className="text-nerissa-teal">SMPN 3 Lumajang</span> dengan melodi efisiensi.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-10">
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
+                <div className="w-2 h-2 bg-nerissa-teal rounded-full animate-pulse shadow-nerissa"></div>
+                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Resonance: Optimal</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
+                <Sparkles className="w-4 h-4 text-nerissa-gold" />
+                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Sync: 100%</span>
+              </div>
+            </div>
           </div>
 
-          <div class="hidden sm:block">
-            <div class="w-20 h-20 bg-white/40 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/40 shadow-xl">
-              <Library class="w-10 h-10 text-[#f48f65]" />
+          <div className="relative group/avatar">
+            <div className="absolute -inset-10 bg-nerissa-teal/10 rounded-full blur-[80px] opacity-0 group-hover/avatar:opacity-100 transition-opacity"></div>
+            <div className="w-40 h-40 md:w-56 md:h-56 bg-gradient-to-tr from-nerissa-midnight to-nerissa-onyx rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl relative overflow-hidden group-hover/avatar:scale-110 transition-transform duration-700">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30"></div>
+              <div className="relative">
+                <Mic2 className="w-20 h-20 text-nerissa-teal/40 group-hover/avatar:scale-125 group-hover/avatar:text-nerissa-teal transition-all duration-700" />
+              </div>
+              {/* Sound wave pulses around avatar */}
+              <div className="absolute inset-0 border-[10px] border-nerissa-teal/10 rounded-full animate-ping opacity-0 group-hover/avatar:opacity-100"></div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <StatCard
           icon={BookOpen}
           label="Total Koleksi Buku"
           value={stats.totalBooks}
           color="blue"
+          trend="+12 unit bulan ini"
         />
         <StatCard
           icon={BookCheck}
@@ -301,33 +327,36 @@ export default function Dashboard() {
           label="Jumlah Siswa"
           value={stats.totalBorrowers}
           color="purple"
+          trend="85% aktif membaca"
         />
         <StatCard
-          icon={BookOpen}
+          icon={Library}
           label="Sedang Dipinjam"
           value={stats.borrowedBooks}
           color="orange"
         />
         <StatCard
-          icon={BookCheck}
+          icon={Music}
           label="Peminjaman Aktif"
           value={stats.activeLoansCount}
           color="teal"
+          trend="Melodi Linkage"
         />
         <StatCard
           icon={AlertTriangle}
           label="Terlambat Kembali"
           value={stats.overdueCount}
           color="red"
+          trend="Cek Registry"
         />
       </div>
 
-      {/* Charts & Tables */}
-      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 h-full">
-        <div class="xl:col-span-2 min-h-[400px]">
+      {/* Tables Row */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 h-full">
+        <div className="xl:col-span-2 min-h-[500px]">
           <RecentLoansTable />
         </div>
-        <div class="min-h-[400px]">
+        <div className="min-h-[500px]">
           <PopularBooks />
         </div>
       </div>

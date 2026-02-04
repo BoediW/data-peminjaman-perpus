@@ -5,15 +5,15 @@ export const POST = async ({ request }) => {
     const { username, password } = await request.json();
 
     const envUser =
-      import.meta.env.ADMIN_USERNAME || process.env.ADMIN_USERNAME;
+      import.meta.env.ADMIN_USERNAME || process.env.ADMIN_USERNAME || "Admin";
     const envPass =
-      import.meta.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+      import.meta.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || "Admin123";
 
     if (username === envUser && password === envPass) {
       return new Response(
         JSON.stringify({
           token: "admin-jwt-token-placeholder",
-          admin: { username: envUser, name: "Admin" },
+          admin: { username: envUser, nama: "Admin" },
         }),
         {
           status: 200,

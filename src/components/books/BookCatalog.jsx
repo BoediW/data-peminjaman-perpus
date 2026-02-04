@@ -5,13 +5,14 @@ import {
   BookOpen,
   Building2,
   Tag,
-  CheckCircle,
-  XCircle,
   Eye,
   BookMarked,
   Hash,
   Calendar,
   User,
+  Music,
+  Disc,
+  Sparkles
 } from "lucide-preact";
 import {
   filteredBooks,
@@ -22,221 +23,182 @@ import {
 } from "../../stores/libraryStore";
 
 function BookCard({ book, index }) {
-  // Use fields from 'buku' table
   const available = book.stok_tersedia || 0;
   const total = book.stok_total || 0;
-  const isAvailable = available > 0;
-
-  // Derive category from kode_buku
-  const getCategory = (code) => {
-    if (!code) return "Lainnya";
-    if (code.startsWith("NOV")) return "Novel";
-    if (code.startsWith("PLJ")) return "Pelajaran";
-    if (code.startsWith("REF")) return "Referensi";
-    if (code.startsWith("KOM")) return "Komik";
-    return "Lainnya";
-  };
-
-  const handleBorrow = () => {
-    activeTab.value = "loans";
-  };
+  const percentage = (available / total) * 100;
 
   return (
     <div
-      class="card group overflow-hidden animate-slide-up"
+      className="group card overflow-hidden border-white/5 bg-nerissa-midnight/40 backdrop-blur-xl flex flex-col h-full animate-slide-up"
       style={{ animationDelay: `${index * 50}ms` }}
     >
-      {/* Card Header with Category */}
-      <div class="bg-gradient-to-r from-primary-800 to-primary-700 px-4 py-3 flex items-center justify-between">
-        <span class="text-white text-xs font-medium px-2.5 py-1 bg-white/20 rounded-full backdrop-blur-sm">
-          {getCategory(book.kode_buku)}
-        </span>
-        <span
-          class={`flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full
-          ${isAvailable ? "bg-green-500 text-white" : "bg-red-500 text-white"}`}
-        >
-          {isAvailable ? (
-            <>
-              <CheckCircle class="w-3.5 h-3.5" />
-              Tersedia
-            </>
-          ) : (
-            <>
-              <XCircle class="w-3.5 h-3.5" />
-              Habis
-            </>
-          )}
-        </span>
-      </div>
+      <div className="relative h-48 sm:h-56 bg-gradient-to-br from-nerissa-raven to-nerissa-onyx overflow-hidden">
+        {/* Background Texture */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none sound-wave"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-nerissa-onyx via-transparent to-transparent"></div>
 
-      {/* Content */}
-      <div class="p-5">
-        {/* Book Code */}
-        <div class="flex items-center gap-2 mb-3">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-50 text-primary-700 rounded-lg text-sm font-mono font-semibold">
-            <Hash class="w-4 h-4" />
-            {book.kode_buku}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative">
+            <BookOpen className="w-20 h-20 text-nerissa-teal/10 group-hover:scale-110 group-hover:text-nerissa-teal/20 transition-all duration-700" />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <Disc className="w-16 h-16 text-nerissa-teal animate-spin-slow" />
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute top-4 right-4">
+          <span className="badge badge-info shadow-nerissa">
+            {book.kategori_nama || "Umum"}
           </span>
         </div>
 
-        {/* Title */}
-        <h3 class="font-display font-bold text-lg text-gray-900 mb-1 line-clamp-2 group-hover:text-primary-700 transition-colors min-h-[3.5rem]">
-          {book.judul}
-        </h3>
-
-        {/* Author */}
-        {book.penulis && (
-          <div class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-            <User class="w-4 h-4 text-gray-400" />
-            {book.penulis}
+        <div className="absolute bottom-4 left-4 right-4">
+          {/* Stock Progress Bar */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-end">
+              <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none">Resource Balance</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none ${available > 0 ? 'text-nerissa-teal' : 'text-red-400'}`}>
+                {available}/{total}
+              </span>
+            </div>
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+              <div
+                className={`h-full transition-all duration-1000 ease-out rounded-full shadow-nerissa ${percentage > 50 ? "bg-nerissa-teal" : percentage > 20 ? "bg-nerissa-gold" : "bg-red-500"
+                  }`}
+                style={{ width: `${percentage}%` }}
+              ></div>
+            </div>
           </div>
-        )}
-
-        {/* Publisher */}
-        <div class="flex items-center gap-2 text-sm text-gray-600 mb-2">
-          <Building2 class="w-4 h-4 text-gray-400" />
-          <span class="truncate">{book.penerbit || "-"}</span>
-        </div>
-
-        {/* Year */}
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-          <Calendar class="w-4 h-4 text-gray-400" />
-          <span>Tahun {book.tahun_terbit || "-"}</span>
-        </div>
-
-        {/* Stock Info */}
-        <div class="flex items-center justify-between pt-4 border-t border-base-200">
-          <div class="flex items-center gap-2">
-            <BookOpen class="w-4 h-4 text-gray-400" />
-            <span class="text-sm text-gray-600">
-              Stok: <span class="font-semibold text-gray-900">{available}</span>{" "}
-              / {total}
-            </span>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div class="mt-3 h-2 bg-base-200 rounded-full overflow-hidden">
-          <div
-            class={`h-full rounded-full transition-all duration-500 ${available === 0
-              ? "bg-red-500"
-              : available < total * 0.3
-                ? "bg-amber-500"
-                : "bg-green-500"
-              }`}
-            style={{ width: `${total > 0 ? (available / total) * 100 : 0}%` }}
-          ></div>
-        </div>
-
-        {/* Action Buttons */}
-        <div class="mt-4 flex gap-2">
-          <button class="btn btn-outline btn-sm flex-1">
-            <Eye class="w-4 h-4" />
-            Detail
-          </button>
-          {isAvailable && (
-            <button onClick={handleBorrow} class="btn btn-accent btn-sm flex-1">
-              <BookMarked class="w-4 h-4" />
-              Pinjam
-            </button>
-          )}
         </div>
       </div>
-    </div>
-  );
-}
 
-function CategoryFilter() {
-  return (
-    <div class="flex flex-wrap gap-2">
-      {categories.value.map((cat) => (
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <h3 className="font-display font-black text-lg text-white group-hover:text-nerissa-teal transition-colors line-clamp-2 leading-tight tracking-tight uppercase">
+            {book.judul}
+          </h3>
+        </div>
+
+        <div className="space-y-3 flex-1 mb-6">
+          <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
+            <User className="w-4 h-4 text-nerissa-teal/60" />
+            <span className="truncate italic">{book.penulis || "Unknown Artist"}</span>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
+            <Building2 className="w-4 h-4 text-nerissa-teal/60" />
+            <span className="truncate">{book.penerbit || "Universal Records"}</span>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-gray-400 font-medium">
+            <Tag className="w-4 h-4 text-nerissa-teal/60" />
+            <span className="truncate">{book.isbn || "ISRC-NONE"}</span>
+          </div>
+        </div>
+
         <button
-          key={cat}
-          onClick={() => (selectedCategory.value = cat)}
-          class={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
-            ${selectedCategory.value === cat
-              ? "bg-primary-800 text-white shadow-md"
-              : "bg-white text-gray-600 hover:bg-base-200 border border-base-300"
-            }`}
+          className="btn btn-outline w-full group/btn overflow-hidden relative h-11"
+          onClick={() => { }}
         >
-          {cat === "all" ? "Semua" : cat}
+          <div className="absolute inset-0 bg-nerissa-teal -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-500"></div>
+          <span className="relative z-10 flex items-center justify-center gap-2 text-xs font-black uppercase tracking-widest group-hover/btn:text-nerissa-onyx">
+            <Eye className="w-4 h-4 animate-pulse" /> Detail Archivist
+          </span>
         </button>
-      ))}
+      </div>
     </div>
   );
 }
 
 export default function BookCatalog() {
-  const booksData = filteredBooks.value;
+  const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <div class="space-y-6 animate-fade-in pb-10">
-      {/* Header */}
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-10 animate-fade-in">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
         <div>
-          <h1 class="section-title">
-            <BookOpen class="w-7 h-7 text-primary-600" />
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-px w-10 bg-nerissa-teal/40"></div>
+            <span className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.4em] leading-none">Registry</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-display font-black text-white italic tracking-tighter uppercase">
             Katalog Buku
           </h1>
-          <p class="text-gray-500 -mt-4 ml-10">
-            Temukan dan pinjam buku yang kamu butuhkan
-          </p>
+          <p className="text-gray-500 text-sm mt-3 font-medium tracking-tight">Menjelajahi arsip pengetahuan dengan harmoni yang sempurna.</p>
         </div>
 
-        <div class="flex items-center gap-2 text-sm text-gray-500">
-          <span class="font-medium text-primary-700">{booksData.length}</span>{" "}
-          buku ditemukan
-        </div>
-      </div>
-
-      {/* Search & Filter */}
-      <div class="card p-4">
-        <div class="flex flex-col md:flex-row gap-4">
-          {/* Search Input */}
-          <div class="relative flex-1">
-            <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative group">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-nerissa-teal transition-colors w-4 h-4" />
             <input
               type="text"
-              placeholder="Cari judul buku, kode buku, penulis, atau penerbit..."
+              placeholder="Cari judul, penulis..."
               value={searchQuery.value}
               onInput={(e) => (searchQuery.value = e.target.value)}
-              class="input pl-12"
+              className="input pl-12 pr-6 h-14 w-full sm:w-[320px] bg-nerissa-midnight/60 text-sm font-bold tracking-tight rounded-full"
             />
           </div>
 
-          {/* Filter Button (Mobile) */}
-          <button class="btn btn-outline md:hidden">
-            <Filter class="w-5 h-5" />
-            Filter
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`btn h-14 px-8 rounded-full border-2 transition-all duration-300 font-black tracking-widest uppercase text-xs flex items-center gap-3
+              ${showFilters ? 'bg-nerissa-teal text-nerissa-onyx border-nerissa-teal' : 'bg-white/5 text-gray-400 border-white/10 hover:border-white/20 hover:text-white'}
+            `}
+          >
+            <Filter className={`w-4 h-4 ${showFilters ? 'animate-bounce' : ''}`} /> Filter
           </button>
-        </div>
-
-        {/* Category Filters */}
-        <div class="mt-4 pt-4 border-t border-base-200">
-          <div class="flex items-center gap-3 mb-3">
-            <Tag class="w-4 h-4 text-gray-500" />
-            <span class="text-sm font-medium text-gray-600">Kategori:</span>
-          </div>
-          <CategoryFilter />
         </div>
       </div>
 
-      {/* Books Grid */}
-      {booksData.length > 0 ? (
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {booksData.map((book, index) => (
+      {showFilters && (
+        <div className="card p-8 animate-slide-up border-nerissa-teal/20 bg-nerissa-teal/5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-4 opacity-10">
+            <Disc size={120} className="animate-spin-slow" />
+          </div>
+          <p className="label mb-6 flex items-center gap-3">
+            <Music size={14} /> Kategorisasi Melodik
+          </p>
+          <div className="flex flex-wrap gap-3 relative z-10">
+            <button
+              onClick={() => (selectedCategory.value = null)}
+              className={`px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all border-2
+                ${selectedCategory.value === null
+                  ? "bg-nerissa-teal border-nerissa-teal text-nerissa-onyx shadow-nerissa"
+                  : "bg-nerissa-onyx/50 text-gray-500 border-white/5 hover:border-white/20 hover:text-gray-300"
+                }
+              `}
+            >
+              Semua Genre
+            </button>
+            {categories.value.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => (selectedCategory.value = cat)}
+                className={`px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all border-2
+                  ${selectedCategory.value === cat
+                    ? "bg-nerissa-teal border-nerissa-teal text-nerissa-onyx shadow-nerissa"
+                    : "bg-nerissa-onyx/50 text-gray-500 border-white/5 hover:border-white/20 hover:text-gray-300"
+                  }
+                `}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {filteredBooks.value.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
+          {filteredBooks.value.map((book, index) => (
             <BookCard key={book.kode_buku} book={book} index={index} />
           ))}
         </div>
       ) : (
-        <div class="empty-state py-16">
-          <BookOpen class="w-16 h-16 text-gray-300 mb-4" />
-          <h3 class="text-lg font-medium text-gray-600 mb-2">
-            Tidak ada buku ditemukan
-          </h3>
-          <p class="text-gray-400">
-            Coba ubah kata kunci pencarian atau filter kategori
-          </p>
+        <div className="card py-32 flex flex-col items-center justify-center text-center bg-nerissa-midnight/20 border-white/5">
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-6 animate-pulse">
+            <Disc className="w-12 h-12 text-gray-700 animate-spin-slow" />
+          </div>
+          <h3 className="text-xl font-display font-black text-gray-600 uppercase tracking-[0.3em]">Arsip Tidak Ditemukan</h3>
+          <p className="text-gray-700 mt-2 font-medium">Coba gunakan frekuensi pencarian yang berbeda.</p>
         </div>
       )}
     </div>

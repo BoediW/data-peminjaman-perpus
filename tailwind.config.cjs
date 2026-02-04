@@ -4,59 +4,50 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // 60% Base - Light gray/white
-        base: {
-          50: "#FFFFFF",
-          100: "#F8FAFC",
-          200: "#F1F5F9",
-          300: "#E2E8F0",
+        nerissa: {
+          midnight: "#0F172A", // Deep dark base
+          raven: "#1E293B",    // Card base
+          teal: "#38BDF8",     // Main accent (melodic teal)
+          purple: "#818CF8",   // Secondary accent
+          onyx: "#020617",     // Deepest black
+          feather: "#334155",  // Muted tones
+          gold: "#FDE047",     // Subtle highlight (tuning fork)
         },
-        // 30% Secondary - School Blue/Navy
         primary: {
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB",
-          700: "#1D4ED8",
-          800: "#1E40AF",
-          900: "#1E3A8A",
-          950: "#172554",
-        },
-        // 10% Accent - Golden Yellow/Orange
-        accent: {
-          50: "#FFFBEB",
-          100: "#FEF3C7",
-          200: "#FDE68A",
-          300: "#FCD34D",
-          400: "#FBBF24",
-          500: "#F59E0B",
-          600: "#D97706",
-          700: "#B45309",
-          800: "#92400E",
-          900: "#78350F",
+          50: "#F0F9FF",
+          100: "#E0F2FE",
+          200: "#BAE6FD",
+          300: "#7DD3FC",
+          400: "#38BDF8",
+          500: "#0EA5E9",
+          600: "#0284C7",
+          700: "#0369A1",
+          800: "#075985",
+          900: "#0C4A6E",
         },
       },
       fontFamily: {
-        sans: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
-        display: ["'Plus Jakarta Sans'", "system-ui", "sans-serif"],
+        sans: ["'Inter'", "system-ui", "sans-serif"],
+        display: ["'Outfit'", "system-ui", "sans-serif"],
+        mono: ["'Fira Code'", "monospace"],
       },
       boxShadow: {
+        nerissa: "0 4px 20px -5px rgba(56, 189, 248, 0.3)",
+        "nerissa-lg": "0 10px 40px -10px rgba(56, 189, 248, 0.4)",
         card: "0 2px 8px -2px rgba(0, 0, 0, 0.1), 0 4px 12px -4px rgba(0, 0, 0, 0.08)",
-        "card-hover":
-          "0 8px 16px -4px rgba(0, 0, 0, 0.12), 0 12px 24px -8px rgba(0, 0, 0, 0.1)",
-        sidebar: "4px 0 24px -8px rgba(0, 0, 0, 0.15)",
       },
       animation: {
+        "wave-echo": "waveEcho 3s ease-in-out infinite",
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-up": "slideUp 0.4s ease-out",
-        "slide-in-right": "slideInRight 0.3s ease-out",
-        "bounce-soft": "bounceSoft 0.5s ease-out",
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 6s ease-in-out infinite",
+        "pulse-cyan": "pulseCyan 2s infinite",
       },
       keyframes: {
+        waveEcho: {
+          "0%, 100%": { transform: "scaleY(1)" },
+          "50%": { transform: "scaleY(1.5)" },
+        },
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
@@ -65,15 +56,19 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        slideInRight: {
-          "0%": { opacity: "0", transform: "translateX(-20px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        bounceSoft: {
+        float: {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-5px)" },
+          "50%": { transform: "translateY(-10px)" },
         },
+        pulseCyan: {
+          "0%, 100%": { boxShadow: "0 0 0px rgba(56, 189, 248, 0.4)" },
+          "50%": { boxShadow: "0 0 20px rgba(56, 189, 248, 0.6)" },
+        }
       },
+      borderRadius: {
+        "nerissa": "0.75rem",
+        "nerissa-lg": "1.25rem",
+      }
     },
   },
   plugins: [],

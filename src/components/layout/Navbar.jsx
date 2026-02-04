@@ -1,5 +1,5 @@
 import { useState, useEffect } from "preact/hooks";
-import { Menu, User, LayoutDashboard, Wrench, LogOut } from "lucide-preact";
+import { Menu, User, LayoutDashboard, Wrench, LogOut, Bell, Search, Mic2, Music } from "lucide-preact";
 
 export default function AdminNavbar({
   onToggleSidebar,
@@ -41,9 +41,9 @@ export default function AdminNavbar({
             setUserName(user.nama);
             setUserEmail(user.email);
           }
-        } catch {}
+        } catch { }
       })();
-    } catch {}
+    } catch { }
   }, []);
 
   useEffect(() => {
@@ -60,13 +60,12 @@ export default function AdminNavbar({
 
   return (
     <div
-      className={`flex items-center justify-between px-6 py-4 transition-all duration-300 sticky top-0 z-30 ${
-        isScrolled
-          ? "glass-nav mx-4 mt-4 rounded-2xl border border-white/20 shadow-lg bg-white/80 backdrop-blur-xl"
-          : "bg-transparent border-b border-transparent p-6"
-      }`}
+      className={`flex items-center justify-between px-8 py-4 transition-all duration-500 sticky top-0 z-30 ${isScrolled
+          ? "bg-nerissa-midnight/60 backdrop-blur-2xl border-b border-white/5 shadow-2xl"
+          : "bg-transparent border-b border-transparent py-6"
+        }`}
     >
-      <div class="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <button
           onClick={() => {
             if (window.innerWidth < 768) {
@@ -75,104 +74,111 @@ export default function AdminNavbar({
               onToggleSidebar?.();
             }
           }}
-          className={`group flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 cursor-pointer ${
-            isScrolled
-              ? "bg-white/50 border border-gray-200 hover:bg-white hover:shadow-md text-gray-600"
-              : "bg-white border border-gray-200/50 shadow-sm hover:shadow hover:border-gray-300 text-gray-600"
-          }`}
+          className="group flex items-center justify-center w-11 h-11 bg-white/5 border border-white/10 rounded-nerissa hover:border-nerissa-teal transition-all duration-300 cursor-pointer"
           aria-label="Toggle Sidebar"
         >
-          <Menu className="w-5 h-5 transition-transform group-hover:scale-110" />
+          <Menu className="w-5 h-5 text-gray-400 transition-transform group-hover:scale-110 group-hover:text-nerissa-teal" />
         </button>
 
-        <h2
-          class={`text-lg font-display font-bold text-gray-800 transition-opacity duration-300 ${isScrolled ? "opacity-100" : "opacity-0 hidden sm:block"}`}
-        >
+        <h2 className={`font-display font-black text-xl text-white transition-all duration-500 overflow-hidden whitespace-nowrap ${isScrolled ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
           Dashboard
         </h2>
       </div>
 
-      <div className="relative">
-        <button
-          onClick={toggleProfileDropdown}
-          aria-label="User menu"
-          className={`flex items-center gap-3 pl-1 pr-1 py-1 rounded-full transition-all duration-200 focus:outline-none cursor-pointer group ${isScrolled ? "bg-gray-100/50 hover:bg-gray-100" : "bg-white/60 hover:bg-white border border-transparent hover:border-gray-100 shadow-sm"}`}
-        >
-          <div className="text-right hidden sm:block pl-3">
-            <p className="text-sm font-semibold text-gray-800 leading-tight group-hover:text-primary-600 transition-colors">
-              {userName || "Admin"}
-            </p>
-            <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
-              Administrator
-            </p>
-          </div>
-          <div className="w-9 h-9 bg-gradient-to-tr from-primary-600 to-primary-400 rounded-full flex items-center justify-center text-white shadow-md ring-2 ring-white group-hover:scale-105 transition-all duration-200">
-            <User className="w-5 h-5" />
-          </div>
-        </button>
+      <div className="flex items-center gap-6">
+        {/* Search Bar Decoration */}
+        <div className={`hidden lg:flex items-center bg-white/5 px-4 h-11 rounded-full border border-white/10 focus-within:border-nerissa-teal/50 transition-all ${isScrolled ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+          <Search className="w-4 h-4 text-gray-500" />
+          <input type="text" placeholder="Cari data..." className="bg-transparent border-none outline-none text-xs text-gray-300 placeholder:text-gray-600 px-3 w-40" />
+        </div>
 
-        {/* Dropdown Menu */}
-        <div
-          id="profile-dropdown"
-          className={`absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50 transform transition-all duration-200 origin-top-right ${
-            isProfileDropdownOpen
-              ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
-              : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
-          }`}
-          role="menu"
-        >
-          {/* User Info Mobile */}
-          <div className="px-6 py-4 bg-gradient-to-br from-gray-50 to-white border-b border-gray-100 mb-2 rounded-t-2xl">
-            <p className="text-xs font-bold text-primary-600 uppercase tracking-wider mb-1">
-              Signed in as
-            </p>
-            <p className="text-sm font-bold text-gray-900 truncate">
-              {userName || "Admin"}
-            </p>
-            <p className="text-xs text-gray-500 truncate font-mono mt-0.5">
-              {userEmail || "admin@sekolah.sch.id"}
-            </p>
-          </div>
+        <div className="flex items-center gap-4">
+          <button className="hidden sm:flex w-11 h-11 items-center justify-center bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-nerissa-teal hover:border-nerissa-teal transition-all relative group">
+            <Bell className="w-5 h-5" />
+            <span className="absolute top-3 right-3 w-2 h-2 bg-nerissa-teal rounded-full animate-ping"></span>
+            <span className="absolute top-3 right-3 w-2 h-2 bg-nerissa-teal rounded-full"></span>
+          </button>
 
-          <div className="px-2 space-y-1">
-            <a
-              href="/site/private/admin"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-all duration-200 gap-3 font-medium group"
-            >
-              <div class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:bg-primary-100 group-hover:text-primary-600 flex items-center justify-center transition-colors">
-                <LayoutDashboard className="w-4 h-4" />
-              </div>
-              Dashboard
-            </a>
-            <a
-              href="/site/private/admin/settings"
-              className="flex items-center px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 rounded-xl transition-all duration-200 gap-3 font-medium group"
-            >
-              <div class="w-8 h-8 rounded-lg bg-gray-100 text-gray-500 group-hover:bg-primary-100 group-hover:text-primary-600 flex items-center justify-center transition-colors">
-                <Wrench className="w-4 h-4" />
-              </div>
-              Pengaturan Akun
-            </a>
-          </div>
-
-          <div className="border-t border-gray-100 my-2 pt-2 px-2">
+          <div className="relative">
             <button
-              onClick={() => {
-                localStorage.removeItem("adminUser");
-                window.location.href = "/";
-              }}
-              className="w-full text-left flex items-center px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 gap-3 font-medium group"
+              onClick={toggleProfileDropdown}
+              aria-label="User menu"
+              className="flex items-center gap-4 pl-1 pr-1 py-1 rounded-full transition-all duration-300 focus:outline-none cursor-pointer group hover:bg-white/5 border border-transparent hover:border-white/10"
             >
-              <div class="w-8 h-8 rounded-lg bg-red-50 text-red-500 group-hover:bg-red-100 group-hover:text-red-700 flex items-center justify-center transition-colors">
-                <LogOut className="w-4 h-4" />
+              <div className="text-right hidden md:block pl-4">
+                <p className="text-sm font-bold text-white leading-none group-hover:text-nerissa-teal transition-colors">
+                  {userName || "Admin"}
+                </p>
+                <p className="text-[10px] uppercase tracking-widest text-gray-500 font-bold mt-1">
+                  Administrator
+                </p>
               </div>
-              Keluar
+              <div className="w-10 h-10 bg-gradient-to-tr from-nerissa-teal to-nerissa-purple rounded-full flex items-center justify-center text-nerissa-onyx shadow-xl transition-all duration-300 group-hover:rotate-12 ring-2 ring-white/10">
+                <User className="w-6 h-6" />
+              </div>
             </button>
+
+            {/* Dropdown Menu */}
+            <div
+              id="profile-dropdown"
+              className={`absolute right-0 mt-4 w-72 bg-nerissa-midnight border border-white/10 rounded-nerissa-lg shadow-nerissa-lg py-3 z-50 transform transition-all duration-500 origin-top-right ${isProfileDropdownOpen
+                  ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
+                  : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
+                }`}
+            >
+              <div className="px-6 py-4 bg-white/5 border-b border-white/10 mb-2 rounded-t-nerissa-lg">
+                <p className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.2em] mb-1">
+                  Sesi Aktif
+                </p>
+                <p className="text-sm font-black text-white truncate max-w-full">
+                  {userName || "Admin"}
+                </p>
+                <p className="text-xs text-gray-500 truncate mt-1">
+                  {userEmail || "admin@sekolah.sch.id"}
+                </p>
+              </div>
+
+              <div className="px-2 space-y-1">
+                <a
+                  href="/site/private/admin"
+                  className="flex items-center px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-nerissa-teal rounded-nerissa transition-all duration-300 gap-4 font-bold uppercase tracking-widest group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-nerissa-teal/20">
+                    <LayoutDashboard className="w-4 h-4" />
+                  </div>
+                  Dashboard
+                </a>
+                <a
+                  href="/site/private/admin/settings"
+                  className="flex items-center px-4 py-2.5 text-sm text-gray-400 hover:bg-white/5 hover:text-nerissa-teal rounded-nerissa transition-all duration-300 gap-4 font-bold uppercase tracking-widest group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-nerissa-teal/20">
+                    <Wrench className="w-4 h-4" />
+                  </div>
+                  Pengaturan
+                </a>
+              </div>
+
+              <div className="border-t border-white/5 mt-3 pt-2 px-2">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("adminUser");
+                    window.location.href = "/";
+                  }}
+                  className="w-full flex items-center px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 rounded-nerissa transition-all duration-300 gap-4 font-black uppercase tracking-widest group"
+                >
+                  <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center group-hover:bg-red-500/20">
+                    <LogOut className="w-4 h-4" />
+                  </div>
+                  Keluar
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Overlay to close dropdown when clicking outside */}
+      {/* Dropdown Overlay */}
       {isProfileDropdownOpen && (
         <div
           className="fixed inset-0 z-40"

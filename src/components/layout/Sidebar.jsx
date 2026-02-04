@@ -9,6 +9,9 @@ import {
   Library,
   GraduationCap,
   ChevronRight,
+  Music,
+  Mic2,
+  Disc
 } from "lucide-preact";
 import { activeTab } from "../../stores/libraryStore";
 
@@ -28,29 +31,32 @@ export default function Sidebar({ isCollapsed }) {
   };
 
   return (
-    <aside class="h-full w-full bg-white border-r border-gray-200 text-gray-800 shadow-sm flex flex-col transition-all duration-300 relative overflow-hidden">
+    <aside className="h-full w-full bg-nerissa-midnight border-r border-white/5 text-gray-300 shadow-2xl flex flex-col transition-all duration-300 relative overflow-hidden">
+      {/* Decorative Sound Texture */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.03] pointer-events-none sound-wave"></div>
+
       {/* Header */}
       <div
-        class={`p-4 border-b border-gray-100 flex items-center ${isCollapsed ? "justify-center" : "gap-3"} transition-all duration-300`}
+        className={`p-6 border-b border-white/5 flex items-center ${isCollapsed ? "justify-center" : "gap-4"} transition-all duration-300 relative z-10`}
       >
-        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0 relative z-10 transition-all duration-300 hover:scale-105">
-          <Library class="w-6 h-6 text-white" />
+        <div className="w-12 h-12 bg-gradient-to-tr from-nerissa-teal to-nerissa-purple rounded-nerissa flex items-center justify-center shadow-lg shadow-nerissa-teal/20 shrink-0 transition-transform hover:rotate-12">
+          <Library className="w-6 h-6 text-nerissa-onyx" />
         </div>
         {!isCollapsed && (
-          <div class="animate-fade-in overflow-hidden whitespace-nowrap">
-            <h1 class="font-display font-bold text-lg leading-tight tracking-tight text-gray-900">
+          <div className="animate-fade-in overflow-hidden whitespace-nowrap">
+            <h1 className="font-display font-black text-xl leading-none tracking-tight text-white mb-1">
               Perpustakaan
             </h1>
-            <p class="text-xs text-gray-500 font-medium">SMPN 3 Lumajang</p>
+            <p className="text-[10px] text-nerissa-teal font-bold uppercase tracking-[0.2em] opacity-80">SMPN 3 Lumajang</p>
           </div>
         )}
       </div>
 
       {/* Navigation */}
-      <nav class="flex-1 p-3 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+      <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent relative z-10">
         {!isCollapsed && (
-          <p class="text-[10px] uppercase tracking-wider text-gray-400 font-bold px-3 mb-2 mt-2 animate-fade-in">
-            Menu Utama
+          <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-black px-4 mb-4 mt-2 animate-fade-in flex items-center gap-2">
+            <Music className="w-3 h-3" /> Menu Utama
           </p>
         )}
 
@@ -63,31 +69,32 @@ export default function Sidebar({ isCollapsed }) {
               key={item.id}
               onClick={() => handleTabChange(item.id)}
               title={isCollapsed ? item.label : ""}
-              class={`group relative flex items-center w-full p-3 rounded-xl transition-all duration-200 cursor-pointer
-                ${
-                  isActive
-                    ? "bg-blue-50 text-blue-600 font-medium"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+              className={`group relative flex items-center w-full px-5 py-3.5 rounded-nerissa transition-all duration-300 cursor-pointer overflow-hidden
+                ${isActive
+                  ? "bg-nerissa-teal/10 text-white"
+                  : "text-gray-500 hover:bg-white/5 hover:text-gray-300"
                 }
-                ${isCollapsed ? "justify-center" : "gap-3"}
+                ${isCollapsed ? "justify-center" : "gap-4"}
               `}
             >
+              {isActive && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-nerissa-teal"></div>
+              )}
+
               <Icon
-                class={`w-5 h-5 transition-transform duration-200 ${isActive ? "scale-110" : "group-hover:scale-110"} ${isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-600"}`}
+                className={`w-5 h-5 relative z-10 transition-all duration-300 ${isActive ? "scale-110 text-nerissa-teal shadow-nerissa" : "group-hover:scale-110 group-hover:text-nerissa-teal"}`}
               />
 
               {!isCollapsed && (
-                <span class="text-sm truncate animate-fade-in">
+                <span className={`text-sm font-bold relative z-10 truncate animate-fade-in ${isActive ? "text-white" : "text-gray-500 group-hover:text-gray-200"}`}>
                   {item.label}
                 </span>
               )}
 
               {isActive && !isCollapsed && (
-                <ChevronRight class="w-4 h-4 ml-auto opacity-50" />
-              )}
-
-              {isCollapsed && isActive && (
-                <div class="absolute right-1 w-1.5 h-1.5 rounded-full bg-blue-600 shadow-sm" />
+                <div className="ml-auto opacity-40">
+                  <ChevronRight className="w-4 h-4" />
+                </div>
               )}
             </button>
           );
@@ -95,20 +102,22 @@ export default function Sidebar({ isCollapsed }) {
       </nav>
 
       {/* Footer */}
-      <div class="p-4 border-t border-gray-100">
+      <div className="p-4 border-t border-white/5 relative z-10">
         <div
-          class={`bg-gray-50 rounded-xl p-3 border border-gray-100 transition-all duration-300 ${isCollapsed ? "flex justify-center" : ""}`}
+          className={`bg-nerissa-onyx/50 rounded-nerissa-lg p-4 border border-white/5 transition-all duration-300 ${isCollapsed ? "flex justify-center" : ""}`}
         >
           <div
-            class={`flex items-center ${isCollapsed ? "justify-center" : "gap-3"}`}
+            className={`flex items-center ${isCollapsed ? "justify-center" : "gap-4"}`}
           >
-            <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm border border-gray-200">
-              <GraduationCap class="w-4 h-4 text-blue-600" />
+            <div className="w-10 h-10 bg-gradient-to-tr from-gray-800 to-gray-900 rounded-full flex items-center justify-center shrink-0 shadow-inner group overflow-hidden">
+              <div className="relative">
+                <GraduationCap className="w-5 h-5 text-nerissa-teal" />
+              </div>
             </div>
             {!isCollapsed && (
-              <div class="overflow-hidden whitespace-nowrap animate-fade-in">
-                <p class="font-semibold text-sm text-gray-900">Petugas</p>
-                <p class="text-[10px] text-gray-500">Admin Perpustakaan</p>
+              <div className="overflow-hidden whitespace-nowrap animate-fade-in">
+                <p className="font-bold text-sm text-white tracking-tight">Petugas</p>
+                <p className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">Admin Perpustakaan</p>
               </div>
             )}
           </div>
