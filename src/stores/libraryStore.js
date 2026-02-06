@@ -2,9 +2,9 @@ import { signal, computed } from "@preact/signals";
 import { supabase } from "../lib/supabase";
 
 // SIGNALS - State Management
-export const books = signal([]);       // Data dari tabel 'buku'
-export const borrowers = signal([]);   // Data dari tabel 'siswa'
-export const loans = signal([]);       // Data dari tabel 'peminjaman'
+export const books = signal([]); // Data dari tabel 'buku'
+export const borrowers = signal([]); // Data dari tabel 'siswa'
+export const loans = signal([]); // Data dari tabel 'peminjaman'
 export const isLoading = signal(false);
 export const searchQuery = signal("");
 export const selectedCategory = signal("all");
@@ -17,7 +17,10 @@ export async function loadData() {
     const [bukuRes, siswaRes, peminjamanRes] = await Promise.all([
       supabase.from("buku").select("*").order("judul"),
       supabase.from("siswa").select("*").order("nama_siswa"),
-      supabase.from("peminjaman").select("*").order("tanggal_pinjam", { ascending: false }),
+      supabase
+        .from("peminjaman")
+        .select("*")
+        .order("tanggal_pinjam", { ascending: false }),
     ]);
 
     if (bukuRes.error) throw bukuRes.error;
@@ -41,14 +44,18 @@ loadData();
 export const categories = computed(() => {
   if (!books.value.length) return ["all"];
   // Derive categories from book codes (e.g., NOV-001 -> Novel)
-  const cats = [...new Set(books.value.map((book) => {
-    const code = book.kode_buku || "";
-    if (code.startsWith("NOV")) return "Novel";
-    if (code.startsWith("PLJ")) return "Pelajaran";
-    if (code.startsWith("REF")) return "Referensi";
-    if (code.startsWith("KOM")) return "Komik";
-    return "Lainnya";
-  }))];
+  const cats = [
+    ...new Set(
+      books.value.map((book) => {
+        const code = book.kode_buku || "";
+        if (code.startsWith("NOV")) return "Novel";
+        if (code.startsWith("PLJ")) return "Pelajaran";
+        if (code.startsWith("REF")) return "Referensi";
+        if (code.startsWith("KOM")) return "Komik";
+        return "Lainnya";
+      }),
+    ),
+  ];
   return ["all", ...cats];
 });
 
@@ -83,16 +90,26 @@ export const filteredBooks = computed(() => {
 });
 
 export const activeLoans = computed(() => {
-  return loans.value.filter((loan) => loan.status === "dipinjam" || loan.status === "terlambat");
+  return loans.value.filter(
+    (loan) => loan.status === "dipinjam" || loan.status === "terlambat",
+  );
 });
 
 export const dashboardStats = computed(() => {
-  const totalBooks = books.value.reduce((acc, book) => acc + (book.stok_total || 0), 0);
-  const availableBooks = books.value.reduce((acc, book) => acc + (book.stok_tersedia || 0), 0);
+  const totalBooks = books.value.reduce(
+    (acc, book) => acc + (book.stok_total || 0),
+    0,
+  );
+  const availableBooks = books.value.reduce(
+    (acc, book) => acc + (book.stok_tersedia || 0),
+    0,
+  );
   const borrowedBooks = totalBooks - availableBooks;
   const totalBorrowers = borrowers.value.length;
   const activeLoansCount = activeLoans.value.length;
-  const overdueCount = loans.value.filter((loan) => loan.status === "terlambat").length;
+  const overdueCount = loans.value.filter(
+    (loan) => loan.status === "terlambat",
+  ).length;
 
   return {
     totalBooks,
@@ -144,12 +161,17 @@ export async function updateBook(kode_buku, bookData) {
     throw error;
   }
 
-  books.value = books.value.map((book) => (book.kode_buku === kode_buku ? data : book));
+  books.value = books.value.map((book) =>
+    book.kode_buku === kode_buku ? data : book,
+  );
   return data;
 }
 
 export async function deleteBook(kode_buku) {
-  const { error } = await supabase.from("buku").delete().eq("kode_buku", kode_buku);
+  const { error } = await supabase
+    .from("buku")
+    .delete()
+    .eq("kode_buku", kode_buku);
 
   if (error) {
     console.error("Error deleting book:", error.message);
@@ -180,6 +202,34 @@ export async function addBorrower(borrowerData) {
 
   borrowers.value = [...borrowers.value, data];
   return data;
+}
+
+export async function updateBorrower(nisn, borrowerData) {
+  const { data, error } = await supabase
+    .from("siswa")
+    .update(borrowerData)
+    .eq("nisn", nisn)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating borrower:", error.message);
+    throw error;
+  }
+
+  borrowers.value = borrowers.value.map((b) => (b.nisn === nisn ? data : b));
+  return data;
+}
+
+export async function deleteBorrower(nisn) {
+  const { error } = await supabase.from("siswa").delete().eq("nisn", nisn);
+
+  if (error) {
+    console.error("Error deleting borrower:", error.message);
+    throw error;
+  }
+
+  borrowers.value = borrowers.value.filter((b) => b.nisn !== nisn);
 }
 
 export function searchBorrower(query) {
@@ -227,7 +277,9 @@ export async function borrowBook(nisn, kode_buku) {
 
   // Update stok_tersedia locally
   books.value = books.value.map((b) =>
-    b.kode_buku === kode_buku ? { ...b, stok_tersedia: Math.max(0, (b.stok_tersedia || 0) - 1) } : b
+    b.kode_buku === kode_buku
+      ? { ...b, stok_tersedia: Math.max(0, (b.stok_tersedia || 0) - 1) }
+      : b,
   );
 
   // Also update in database
@@ -249,7 +301,7 @@ export async function returnBook(loanId) {
     .from("peminjaman")
     .update({
       status: "kembali",
-      tanggal_kembali_aktual: new Date().toISOString().split("T")[0]
+      tanggal_kembali_aktual: new Date().toISOString().split("T")[0],
     })
     .eq("id", loanId)
     .select()
@@ -267,7 +319,9 @@ export async function returnBook(loanId) {
   const book = books.value.find((b) => b.kode_buku === loan.kode_buku);
   if (book) {
     books.value = books.value.map((b) =>
-      b.kode_buku === loan.kode_buku ? { ...b, stok_tersedia: (b.stok_tersedia || 0) + 1 } : b
+      b.kode_buku === loan.kode_buku
+        ? { ...b, stok_tersedia: (b.stok_tersedia || 0) + 1 }
+        : b,
     );
 
     await supabase
@@ -294,25 +348,33 @@ export function getLoanDetails(loanId) {
     returnDate: loan.tanggal_kembali_aktual,
     borrowerId: loan.nisn,
     bookId: loan.kode_buku,
-    borrower: borrower ? {
-      id: borrower.nisn,
-      nisn: borrower.nisn,
-      name: borrower.nama_siswa,
-      class: borrower.kelas,
-    } : null,
-    book: book ? {
-      id: book.kode_buku,
-      code: book.kode_buku,
-      title: book.judul,
-      publisher: book.penerbit,
-      author: book.penulis,
-      year: book.tahun_terbit,
-      stock: book.stok_total,
-      available: book.stok_tersedia,
-    } : null,
+    borrower: borrower
+      ? {
+          id: borrower.nisn,
+          nisn: borrower.nisn,
+          name: borrower.nama_siswa,
+          class: borrower.kelas,
+        }
+      : null,
+    book: book
+      ? {
+          id: book.kode_buku,
+          code: book.kode_buku,
+          title: book.judul,
+          publisher: book.penerbit,
+          author: book.penulis,
+          year: book.tahun_terbit,
+          stock: book.stok_total,
+          available: book.stok_tersedia,
+        }
+      : null,
     // Normalize status for components
-    status: loan.status === "dipinjam" ? "active" :
-      loan.status === "terlambat" ? "overdue" : "returned",
+    status:
+      loan.status === "dipinjam"
+        ? "active"
+        : loan.status === "terlambat"
+          ? "overdue"
+          : "returned",
   };
 }
 

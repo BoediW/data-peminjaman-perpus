@@ -13,7 +13,7 @@ import {
   Music,
   Mic2,
   Disc,
-  Sparkles
+  Sparkles,
 } from "lucide-preact";
 import {
   dashboardStats,
@@ -28,15 +28,20 @@ import {
 function StatCard({ icon: Icon, label, value, color, trend }) {
   const colorClasses = {
     blue: "from-nerissa-teal/10 to-nerissa-teal/5 text-nerissa-teal border-nerissa-teal/20 shadow-nerissa-teal/10",
-    green: "from-emerald-500/10 to-emerald-500/5 text-emerald-400 border-emerald-500/20 shadow-emerald-500/10",
-    orange: "from-nerissa-gold/10 to-nerissa-gold/5 text-nerissa-gold border-nerissa-gold/20 shadow-nerissa-gold/10",
+    green:
+      "from-emerald-500/10 to-emerald-500/5 text-emerald-400 border-emerald-500/20 shadow-emerald-500/10",
+    orange:
+      "from-nerissa-gold/10 to-nerissa-gold/5 text-nerissa-gold border-nerissa-gold/20 shadow-nerissa-gold/10",
     red: "from-red-500/10 to-red-500/5 text-red-400 border-red-500/20 shadow-red-500/10",
-    purple: "from-nerissa-purple/10 to-nerissa-purple/5 text-nerissa-purple border-nerissa-purple/20 shadow-nerissa-purple/10",
+    purple:
+      "from-nerissa-purple/10 to-nerissa-purple/5 text-nerissa-purple border-nerissa-purple/20 shadow-nerissa-purple/10",
     teal: "from-cyan-400/10 to-cyan-400/5 text-cyan-400 border-cyan-400/20 shadow-cyan-400/10",
   };
 
   return (
-    <div className={`group relative bg-gradient-to-br ${colorClasses[color]} backdrop-blur-md rounded-nerissa-lg p-7 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}>
+    <div
+      className={`group relative bg-gradient-to-br ${colorClasses[color]} backdrop-blur-md rounded-nerissa-lg p-7 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}
+    >
       {/* Wave Decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
@@ -45,14 +50,18 @@ function StatCard({ icon: Icon, label, value, color, trend }) {
           <div className="w-12 h-12 rounded-nerissa bg-nerissa-onyx/40 flex items-center justify-center border border-white/5 shadow-inner transition-transform group-hover:rotate-12">
             <Icon className="w-6 h-6" />
           </div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 leading-none">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 leading-none">
+            {label}
+          </p>
         </div>
 
         <div className="flex items-baseline gap-3">
           <h3 className="text-4xl font-display font-black tracking-tight text-white">
             {value}
           </h3>
-          <span className="text-[10px] font-black uppercase tracking-widest opacity-30">Total Units</span>
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-30">
+            Total Units
+          </span>
         </div>
 
         {trend && (
@@ -88,11 +97,12 @@ function RecentLoansTable() {
           onClick={() => (activeTab.value = "loans")}
           className="btn btn-ghost btn-sm group text-[10px] font-black tracking-widest uppercase hover:text-nerissa-teal"
         >
-          Lihat Semua <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          Lihat Semua{" "}
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
-      <div className="overflow-x-auto flex-1 p-2 relative">
+      <div className="overflow-x-auto overflow-y-auto flex-1 p-2 relative custom-scrollbar">
         <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
         <table className="table">
           <thead>
@@ -132,11 +142,19 @@ function RecentLoansTable() {
                 </td>
                 <td className="px-6 py-5">
                   <span
-                    className={`badge ${loan.status === "overdue" ? "badge-danger" : "badge-success"
-                      }`}
+                    className={`badge ${
+                      loan.status === "overdue"
+                        ? "badge-danger"
+                        : "badge-success"
+                    }`}
                   >
-                    <div className={`w-1.5 h-1.5 rounded-full mr-2 ${loan.status === "overdue" ? "bg-red-500 animate-ping" : "bg-nerissa-teal shadow-nerissa"
-                      }`}></div>
+                    <div
+                      className={`w-1.5 h-1.5 rounded-full mr-2 ${
+                        loan.status === "overdue"
+                          ? "bg-red-500 animate-ping"
+                          : "bg-nerissa-teal shadow-nerissa"
+                      }`}
+                    ></div>
                     {loan.status === "overdue" ? "Terlambat" : "Dipinjam"}
                   </span>
                 </td>
@@ -148,7 +166,9 @@ function RecentLoansTable() {
                 <td colSpan="3" className="px-6 py-20 text-center">
                   <div className="flex flex-col items-center gap-4 opacity-10">
                     <Disc className="w-16 h-16 animate-spin-slow" />
-                    <p className="text-xs font-black uppercase tracking-[0.4em]">Registry Empty</p>
+                    <p className="text-xs font-black uppercase tracking-[0.4em]">
+                      Registry Empty
+                    </p>
                   </div>
                 </td>
               </tr>
@@ -177,7 +197,7 @@ function PopularBooks() {
           Buku Populer
         </h3>
       </div>
-      <div className="p-4 space-y-3 flex-1 relative">
+      <div className="p-4 space-y-3 flex-1 relative overflow-y-auto custom-scrollbar">
         <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
         {popularBooks.map((book, index) => {
           const borrowed = (book.stok_total || 0) - (book.stok_tersedia || 0);
@@ -188,14 +208,15 @@ function PopularBooks() {
             >
               <div
                 className={`w-10 h-10 rounded-nerissa flex items-center justify-center font-black text-sm shadow-xl shrink-0 transition-transform group-hover:rotate-12
-              ${index === 0
-                    ? "bg-gradient-to-tr from-nerissa-gold to-yellow-600 text-nerissa-onyx"
-                    : index === 1
-                      ? "bg-gradient-to-tr from-slate-300 to-slate-500 text-nerissa-onyx"
-                      : index === 2
-                        ? "bg-gradient-to-tr from-orange-400 to-orange-600 text-nerissa-onyx"
-                        : "bg-nerissa-onyx text-gray-500 border border-white/5"
-                  }`}
+              ${
+                index === 0
+                  ? "bg-gradient-to-tr from-nerissa-gold to-yellow-600 text-nerissa-onyx"
+                  : index === 1
+                    ? "bg-gradient-to-tr from-slate-300 to-slate-500 text-nerissa-onyx"
+                    : index === 2
+                      ? "bg-gradient-to-tr from-orange-400 to-orange-600 text-nerissa-onyx"
+                      : "bg-nerissa-onyx text-gray-500 border border-white/5"
+              }`}
               >
                 {index + 1}
               </div>
@@ -252,7 +273,9 @@ export default function Dashboard() {
       <div className="min-h-screen flex items-center justify-center bg-nerissa-onyx">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-nerissa-teal animate-spin mx-auto mb-6" />
-          <p className="text-gray-400 font-display font-medium uppercase tracking-[0.3em] animate-pulse">Memverifikasi Sesi...</p>
+          <p className="text-gray-400 font-display font-medium uppercase tracking-[0.3em] animate-pulse">
+            Memverifikasi Sesi...
+          </p>
         </div>
       </div>
     );
@@ -266,29 +289,39 @@ export default function Dashboard() {
       {/* Welcome Header */}
       <div className="relative overflow-hidden rounded-nerissa-lg bg-gradient-to-br from-nerissa-midnight to-nerissa-onyx border border-white/10 shadow-nerissa-lg p-1">
         <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-nerissa-teal/5 to-transparent"></div>
-        <div className="absolute -bottom-10 -right-10 text-[18rem] text-white/5 font-display select-none pointer-events-none">N</div>
+        <div className="absolute -bottom-10 -right-10 text-[18rem] text-white/5 font-display select-none pointer-events-none">
+          N
+        </div>
 
         <div className="relative z-10 px-10 py-12 md:px-14 md:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="max-w-xl text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
               <div className="h-px w-10 bg-nerissa-teal/40"></div>
-              <span className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.4em] leading-none">Status: Melodic</span>
+              <span className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.4em] leading-none">
+                Status: Melodic
+              </span>
             </div>
             <h1 className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter text-white uppercase italic">
               Selamat Datang, Admin
             </h1>
             <p className="text-gray-400 text-lg leading-relaxed max-w-lg font-medium tracking-tight">
-              Kelola data buku, peminjaman, dan anggota perpustakaan <span className="text-nerissa-teal">SMPN 3 Lumajang</span> dengan melodi efisiensi.
+              Kelola data buku, peminjaman, dan anggota perpustakaan{" "}
+              <span className="text-nerissa-teal">SMPN 3 Lumajang</span> dengan
+              melodi efisiensi.
             </p>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-10">
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
                 <div className="w-2 h-2 bg-nerissa-teal rounded-full animate-pulse shadow-nerissa"></div>
-                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Resonance: Optimal</span>
+                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">
+                  Resonance: Optimal
+                </span>
               </div>
               <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
                 <Sparkles className="w-4 h-4 text-nerissa-gold" />
-                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Sync: 100%</span>
+                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">
+                  Sync: 100%
+                </span>
               </div>
             </div>
           </div>

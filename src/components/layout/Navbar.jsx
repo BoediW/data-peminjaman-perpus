@@ -1,5 +1,15 @@
 import { useState, useEffect } from "preact/hooks";
-import { Menu, User, LayoutDashboard, Wrench, LogOut, Bell, Search, Mic2, Music } from "lucide-preact";
+import {
+  Menu,
+  User,
+  LayoutDashboard,
+  Wrench,
+  LogOut,
+  Bell,
+  Search,
+  Mic2,
+  Music,
+} from "lucide-preact";
 
 export default function AdminNavbar({
   onToggleSidebar,
@@ -41,9 +51,9 @@ export default function AdminNavbar({
             setUserName(user.nama);
             setUserEmail(user.email);
           }
-        } catch { }
+        } catch {}
       })();
-    } catch { }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -60,10 +70,11 @@ export default function AdminNavbar({
 
   return (
     <div
-      className={`flex items-center justify-between px-8 py-4 transition-all duration-500 sticky top-0 z-30 ${isScrolled
+      className={`flex items-center justify-between px-8 py-4 transition-all duration-500 sticky top-0 z-30 ${
+        isScrolled
           ? "bg-nerissa-midnight/60 backdrop-blur-2xl border-b border-white/5 shadow-2xl"
           : "bg-transparent border-b border-transparent py-6"
-        }`}
+      }`}
     >
       <div className="flex items-center gap-6">
         <button
@@ -80,23 +91,29 @@ export default function AdminNavbar({
           <Menu className="w-5 h-5 text-gray-400 transition-transform group-hover:scale-110 group-hover:text-nerissa-teal" />
         </button>
 
-        <h2 className={`font-display font-black text-xl text-white transition-all duration-500 overflow-hidden whitespace-nowrap ${isScrolled ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
+        <h2
+          className={`font-display font-black text-xl text-white transition-all duration-500 overflow-hidden whitespace-nowrap ${isScrolled ? "w-auto opacity-100" : "w-0 opacity-0"}`}
+        >
           Dashboard
         </h2>
       </div>
 
       <div className="flex items-center gap-6">
         {/* Search Bar Decoration */}
-        <div className={`hidden lg:flex items-center bg-white/5 px-4 h-11 rounded-full border border-white/10 focus-within:border-nerissa-teal/50 transition-all ${isScrolled ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}>
+        <div
+          className={`hidden lg:flex items-center bg-white/5 px-4 h-11 rounded-full border border-white/10 focus-within:border-nerissa-teal/50 transition-all ${isScrolled ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"}`}
+        >
           <Search className="w-4 h-4 text-gray-500" />
-          <input type="text" placeholder="Cari data..." className="bg-transparent border-none outline-none text-xs text-gray-300 placeholder:text-gray-600 px-3 w-40" />
+          <input
+            type="text"
+            placeholder="Cari data..."
+            className="bg-transparent border-none outline-none text-xs text-gray-300 placeholder:text-gray-600 px-3 w-40"
+          />
         </div>
 
         <div className="flex items-center gap-4">
           <button className="hidden sm:flex w-11 h-11 items-center justify-center bg-white/5 border border-white/10 rounded-full text-gray-400 hover:text-nerissa-teal hover:border-nerissa-teal transition-all relative group">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-3 right-3 w-2 h-2 bg-nerissa-teal rounded-full animate-ping"></span>
-            <span className="absolute top-3 right-3 w-2 h-2 bg-nerissa-teal rounded-full"></span>
+            <Bell className="w-5 h-5" />{" "}
           </button>
 
           <div className="relative">
@@ -121,10 +138,11 @@ export default function AdminNavbar({
             {/* Dropdown Menu */}
             <div
               id="profile-dropdown"
-              className={`absolute right-0 mt-4 w-72 bg-nerissa-midnight border border-white/10 rounded-nerissa-lg shadow-nerissa-lg py-3 z-50 transform transition-all duration-500 origin-top-right ${isProfileDropdownOpen
+              className={`absolute right-0 mt-4 w-72 bg-nerissa-midnight border border-white/10 rounded-nerissa-lg shadow-nerissa-lg py-3 z-50 transform transition-all duration-500 origin-top-right ${
+                isProfileDropdownOpen
                   ? "opacity-100 translate-y-0 scale-100 pointer-events-auto"
                   : "opacity-0 -translate-y-2 scale-95 pointer-events-none"
-                }`}
+              }`}
             >
               <div className="px-6 py-4 bg-white/5 border-b border-white/10 mb-2 rounded-t-nerissa-lg">
                 <p className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.2em] mb-1">

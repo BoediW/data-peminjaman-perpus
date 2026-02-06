@@ -12,9 +12,41 @@
   body {
     @apply bg-nerissa-onyx text-gray-200 font-sans antialiased overflow-x-hidden;
     background-image:
-      radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.05) 0%, transparent 40%);
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(56, 189, 248, 0.05) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(129, 140, 248, 0.05) 0%,
+        transparent 40%
+      );
     background-attachment: fixed;
+  }
+
+  /* Professional Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-nerissa-feather/50;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-nerissa-teal;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   h1,
@@ -28,7 +60,6 @@
 }
 
 @layer components {
-
   /* Nerissa Card - Sleek and Glassy */
   .card {
     @apply bg-nerissa-midnight/40 backdrop-blur-xl border border-white/10 rounded-nerissa-lg transition-all duration-300;
@@ -133,7 +164,13 @@
   }
 
   .sound-wave {
-    background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(56, 189, 248, 0.1) 2px, rgba(56, 189, 248, 0.1) 4px);
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(56, 189, 248, 0.1) 2px,
+      rgba(56, 189, 248, 0.1) 4px
+    );
   }
 }
 
