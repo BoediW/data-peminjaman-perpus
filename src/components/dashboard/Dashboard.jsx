@@ -1,4 +1,4 @@
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useRef, useCallback } from "preact/hooks";
 import {
   BookOpen,
   Users,
@@ -10,10 +10,9 @@ import {
   ArrowRight,
   Clock,
   Loader2,
-  Music,
-  Mic2,
-  Disc,
-  Sparkles
+  Zap,
+  Sparkles,
+  Activity,
 } from "lucide-preact";
 import {
   dashboardStats,
@@ -27,44 +26,44 @@ import {
 
 function StatCard({ icon: Icon, label, value, color, trend }) {
   const colorClasses = {
-    blue: "from-nerissa-teal/10 to-nerissa-teal/5 text-nerissa-teal border-nerissa-teal/20 shadow-nerissa-teal/10",
-    green: "from-emerald-500/10 to-emerald-500/5 text-emerald-400 border-emerald-500/20 shadow-emerald-500/10",
-    orange: "from-nerissa-gold/10 to-nerissa-gold/5 text-nerissa-gold border-nerissa-gold/20 shadow-nerissa-gold/10",
-    red: "from-red-500/10 to-red-500/5 text-red-400 border-red-500/20 shadow-red-500/10",
-    purple: "from-nerissa-purple/10 to-nerissa-purple/5 text-nerissa-purple border-nerissa-purple/20 shadow-nerissa-purple/10",
-    teal: "from-cyan-400/10 to-cyan-400/5 text-cyan-400 border-cyan-400/20 shadow-cyan-400/10",
+    violet: "from-zedd-violet/8 to-zedd-violet/3 text-zedd-violet border-zedd-violet/15",
+    green: "from-emerald-500/8 to-emerald-500/3 text-emerald-600 border-emerald-200",
+    amber: "from-amber-500/8 to-amber-500/3 text-amber-600 border-amber-200",
+    red: "from-red-500/8 to-red-500/3 text-red-500 border-red-200",
+    blue: "from-zedd-blue/8 to-zedd-blue/3 text-zedd-blue border-zedd-blue/15",
+    cyan: "from-zedd-cyan/8 to-zedd-cyan/3 text-zedd-cyan border-zedd-cyan/15",
   };
 
   return (
-    <div className={`group relative bg-gradient-to-br ${colorClasses[color]} backdrop-blur-md rounded-nerissa-lg p-7 border transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 overflow-hidden`}>
-      {/* Wave Decoration */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+    <div className={`group relative bg-gradient-to-br ${colorClasses[color]} backdrop-blur-md rounded-zedd-lg p-7 border transition-all duration-500 hover:shadow-lg hover:-translate-y-1 overflow-hidden`}>
+      {/* Spectrum Line Top */}
+      <div className="absolute top-0 left-0 w-full h-0.5 spectrum-bar opacity-40"></div>
 
       <div className="relative z-10">
         <div className="flex items-center gap-4 mb-6">
-          <div className="w-12 h-12 rounded-nerissa bg-nerissa-onyx/40 flex items-center justify-center border border-white/5 shadow-inner transition-transform group-hover:rotate-12">
+          <div className="w-12 h-12 rounded-zedd bg-white/80 flex items-center justify-center border border-current/10 shadow-sm transition-transform group-hover:rotate-12">
             <Icon className="w-6 h-6" />
           </div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60 leading-none">{label}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-70 leading-none">{label}</p>
         </div>
 
         <div className="flex items-baseline gap-3">
-          <h3 className="text-4xl font-display font-black tracking-tight text-white">
+          <h3 className="text-4xl font-display font-black tracking-tight text-zedd-carbon">
             {value}
           </h3>
-          <span className="text-[10px] font-black uppercase tracking-widest opacity-30">Total Units</span>
+          <span className="text-[10px] font-black uppercase tracking-widest opacity-30">Total</span>
         </div>
 
         {trend && (
-          <div className="flex items-center gap-2 mt-5 text-[10px] font-black text-white/40 bg-white/5 w-fit px-3 py-1 rounded-full border border-white/5">
-            <TrendingUp className="w-3 h-3 text-nerissa-teal" />
+          <div className="flex items-center gap-2 mt-5 text-[10px] font-black text-zedd-steel bg-white/60 w-fit px-3 py-1 rounded-full border border-current/10">
+            <TrendingUp className="w-3 h-3" />
             <span className="uppercase tracking-[0.1em]">{trend}</span>
           </div>
         )}
       </div>
 
-      {/* Background Decorative Icon */}
-      <div className="absolute -right-4 -bottom-4 opacity-[0.03] rotate-[-15deg] group-hover:scale-125 transition-transform duration-700 pointer-events-none">
+      {/* Background Icon */}
+      <div className="absolute -right-4 -bottom-4 opacity-[0.04] rotate-[-15deg] group-hover:scale-125 transition-transform duration-700 pointer-events-none">
         <Icon className="w-32 h-32" />
       </div>
     </div>
@@ -78,22 +77,21 @@ function RecentLoansTable() {
     .filter(Boolean);
 
   return (
-    <div className="card h-full flex flex-col border-white/5 shadow-2xl overflow-hidden bg-nerissa-midnight/40 backdrop-blur-xl">
-      <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
-        <h3 className="font-display font-black text-xl text-white flex items-center gap-4 tracking-tight">
-          <Clock className="w-6 h-6 text-nerissa-teal animate-pulse" />
+    <div className="card h-full flex flex-col overflow-hidden">
+      <div className="p-8 border-b border-zedd-silver/40 flex items-center justify-between bg-zedd-glass/50">
+        <h3 className="font-display font-black text-xl text-zedd-carbon flex items-center gap-4 tracking-tight">
+          <Clock className="w-6 h-6 text-zedd-violet" />
           Peminjaman Terbaru
         </h3>
         <button
           onClick={() => (activeTab.value = "loans")}
-          className="btn btn-ghost btn-sm group text-[10px] font-black tracking-widest uppercase hover:text-nerissa-teal"
+          className="btn btn-ghost btn-sm group text-[10px] font-black tracking-widest uppercase hover:text-zedd-violet"
         >
           Lihat Semua <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
 
       <div className="overflow-x-auto flex-1 p-2 relative">
-        <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
         <table className="table">
           <thead>
             <tr>
@@ -107,14 +105,14 @@ function RecentLoansTable() {
               <tr key={loan.id} className="group transition-colors">
                 <td className="px-6 py-5">
                   <div className="flex items-center gap-4">
-                    <div className="w-9 h-9 border border-white/10 bg-nerissa-onyx/40 flex items-center justify-center font-bold text-xs text-nerissa-teal rounded-nerissa">
+                    <div className="w-9 h-9 border border-zedd-violet/15 bg-zedd-violet/5 flex items-center justify-center font-bold text-xs text-zedd-violet rounded-zedd">
                       {loan.borrower?.name?.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-bold text-white text-sm tracking-tight capitalize">
+                      <p className="font-bold text-zedd-carbon text-sm tracking-tight capitalize">
                         {loan.borrower?.name}
                       </p>
-                      <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mt-0.5">
+                      <p className="text-[10px] font-bold text-zedd-steel uppercase tracking-widest mt-0.5">
                         Kelas {loan.borrower?.class}
                       </p>
                     </div>
@@ -122,21 +120,17 @@ function RecentLoansTable() {
                 </td>
                 <td className="px-6 py-5">
                   <div className="flex flex-col">
-                    <span className="text-sm font-bold text-gray-300 line-clamp-1 group-hover:text-nerissa-teal transition-colors">
+                    <span className="text-sm font-bold text-zedd-carbon line-clamp-1 group-hover:text-zedd-violet transition-colors">
                       {loan.book?.title}
                     </span>
-                    <span className="text-[10px] font-black text-gray-600 uppercase tracking-widest mt-1">
+                    <span className="text-[10px] font-bold text-zedd-steel uppercase tracking-widest mt-1">
                       {formatDate(loan.borrowDate)}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-5">
-                  <span
-                    className={`badge ${loan.status === "overdue" ? "badge-danger" : "badge-success"
-                      }`}
-                  >
-                    <div className={`w-1.5 h-1.5 rounded-full mr-2 ${loan.status === "overdue" ? "bg-red-500 animate-ping" : "bg-nerissa-teal shadow-nerissa"
-                      }`}></div>
+                  <span className={`badge ${loan.status === "overdue" ? "badge-danger" : "badge-success"}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full mr-2 ${loan.status === "overdue" ? "bg-red-500 animate-ping" : "bg-emerald-500"}`}></div>
                     {loan.status === "overdue" ? "Terlambat" : "Dipinjam"}
                   </span>
                 </td>
@@ -146,9 +140,9 @@ function RecentLoansTable() {
             {recentLoans.length === 0 && (
               <tr>
                 <td colSpan="3" className="px-6 py-20 text-center">
-                  <div className="flex flex-col items-center gap-4 opacity-10">
-                    <Disc className="w-16 h-16 animate-spin-slow" />
-                    <p className="text-xs font-black uppercase tracking-[0.4em]">Registry Empty</p>
+                  <div className="flex flex-col items-center gap-4 text-zedd-steel/30">
+                    <Activity className="w-16 h-16" />
+                    <p className="text-xs font-black uppercase tracking-[0.4em]">Belum Ada Data</p>
                   </div>
                 </td>
               </tr>
@@ -170,45 +164,44 @@ function PopularBooks() {
     .slice(0, 5);
 
   return (
-    <div className="card h-full flex flex-col border-white/5 shadow-2xl overflow-hidden bg-nerissa-midnight/40 backdrop-blur-xl">
-      <div className="p-8 border-b border-white/5 bg-nerissa-teal/5">
-        <h3 className="font-display font-black text-xl text-white flex items-center gap-4 tracking-tight">
-          <TrendingUp className="w-6 h-6 text-nerissa-gold" />
+    <div className="card h-full flex flex-col overflow-hidden">
+      <div className="p-8 border-b border-zedd-silver/40 bg-zedd-glass/50">
+        <h3 className="font-display font-black text-xl text-zedd-carbon flex items-center gap-4 tracking-tight">
+          <TrendingUp className="w-6 h-6 text-zedd-blue" />
           Buku Populer
         </h3>
       </div>
       <div className="p-4 space-y-3 flex-1 relative">
-        <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-[0.02] pointer-events-none sound-wave"></div>
         {popularBooks.map((book, index) => {
           const borrowed = (book.stok_total || 0) - (book.stok_tersedia || 0);
           return (
             <div
               key={book.kode_buku}
-              className="flex items-center gap-5 p-4 bg-white/5 border border-transparent hover:border-nerissa-teal/30 rounded-nerissa transition-all duration-300 group cursor-pointer"
+              className="flex items-center gap-5 p-4 bg-zedd-glass/50 border border-transparent hover:border-zedd-violet/20 rounded-zedd transition-all duration-300 group cursor-pointer"
             >
               <div
-                className={`w-10 h-10 rounded-nerissa flex items-center justify-center font-black text-sm shadow-xl shrink-0 transition-transform group-hover:rotate-12
+                className={`w-10 h-10 rounded-zedd flex items-center justify-center font-black text-sm shadow-sm shrink-0 transition-transform group-hover:rotate-12
               ${index === 0
-                    ? "bg-gradient-to-tr from-nerissa-gold to-yellow-600 text-nerissa-onyx"
+                    ? "bg-gradient-to-tr from-amber-400 to-amber-500 text-white"
                     : index === 1
-                      ? "bg-gradient-to-tr from-slate-300 to-slate-500 text-nerissa-onyx"
+                      ? "bg-gradient-to-tr from-slate-300 to-slate-400 text-white"
                       : index === 2
-                        ? "bg-gradient-to-tr from-orange-400 to-orange-600 text-nerissa-onyx"
-                        : "bg-nerissa-onyx text-gray-500 border border-white/5"
+                        ? "bg-gradient-to-tr from-orange-300 to-orange-400 text-white"
+                        : "bg-zedd-glass text-zedd-steel border border-zedd-silver/60"
                   }`}
               >
                 {index + 1}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-white truncate group-hover:text-nerissa-teal transition-colors">
+                <p className="font-bold text-sm text-zedd-carbon truncate group-hover:text-zedd-violet transition-colors">
                   {book.judul}
                 </p>
-                <div className="flex items-center gap-3 text-[10px] font-black text-gray-600 uppercase tracking-widest mt-1">
-                  <span className="truncate max-w-[100px] italic">
+                <div className="flex items-center gap-3 text-[10px] font-bold text-zedd-steel uppercase tracking-widest mt-1">
+                  <span className="truncate max-w-[100px]">
                     {book.penerbit || "-"}
                   </span>
-                  <div className="w-1 h-1 bg-nerissa-teal/30 rounded-full"></div>
-                  <span className="text-nerissa-teal/60">
+                  <div className="w-1 h-1 bg-zedd-violet/30 rounded-full"></div>
+                  <span className="text-zedd-violet/60">
                     {borrowed} Dipinjam
                   </span>
                 </div>
@@ -217,8 +210,8 @@ function PopularBooks() {
           );
         })}
         {popularBooks.length === 0 && (
-          <div className="text-center py-20 text-gray-700 font-black uppercase tracking-[0.4em]">
-            No Records
+          <div className="text-center py-20 text-zedd-steel font-black uppercase tracking-[0.4em] text-xs">
+            Belum Ada Data
           </div>
         )}
       </div>
@@ -226,18 +219,115 @@ function PopularBooks() {
   );
 }
 
+// ==========================================
+// Zedd x Valorant Spectrum Inspect Easter Egg
+// YouTube IFrame Player API — plays actual music
+// ==========================================
+function useSpectrumInspect() {
+  const playerRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const apiLoadedRef = useRef(false);
+
+  // Load YouTube IFrame API script once
+  useEffect(() => {
+    if (apiLoadedRef.current) return;
+    apiLoadedRef.current = true;
+
+    // Create hidden container for the player
+    const container = document.createElement("div");
+    container.id = "yt-spectrum-player";
+    container.style.cssText = "position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;";
+    document.body.appendChild(container);
+    containerRef.current = container;
+
+    // Load the YT API script
+    if (!window.YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+    }
+
+    const initPlayer = () => {
+      playerRef.current = new window.YT.Player("yt-spectrum-player", {
+        height: "1",
+        width: "1",
+        videoId: "5tr191ap2vs",
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          rel: 0,
+          playsinline: 1,
+        },
+        events: {
+          onReady: () => setIsReady(true),
+          onStateChange: (event) => {
+            // YT.PlayerState: PLAYING=1, PAUSED=2, ENDED=0
+            if (event.data === 0) {
+              // Video ended
+              setIsPlaying(false);
+            } else if (event.data === 1) {
+              setIsPlaying(true);
+            } else if (event.data === 2) {
+              setIsPlaying(false);
+            }
+          },
+        },
+      });
+    };
+
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+    } else {
+      window.onYouTubeIframeAPIReady = initPlayer;
+    }
+
+    return () => {
+      if (playerRef.current) {
+        try { playerRef.current.destroy(); } catch (e) { /* ignore */ }
+      }
+      if (containerRef.current && containerRef.current.parentNode) {
+        containerRef.current.parentNode.removeChild(containerRef.current);
+      }
+    };
+  }, []);
+
+  const playSpectrumInspect = useCallback(() => {
+    if (!playerRef.current || !isReady) return;
+
+    try {
+      const state = playerRef.current.getPlayerState();
+      if (state === 1) {
+        // Currently playing → pause
+        playerRef.current.pauseVideo();
+      } else {
+        // Not playing → play from start
+        playerRef.current.seekTo(0, true);
+        playerRef.current.playVideo();
+      }
+    } catch (e) {
+      console.warn("YouTube player error:", e);
+    }
+  }, [isReady]);
+
+  return { playSpectrumInspect, isPlaying };
+}
+
 export default function Dashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { playSpectrumInspect, isPlaying: isEasterEggPlaying } = useSpectrumInspect();
   const stats = dashboardStats.value;
 
   useEffect(() => {
-    // Cek apakah user sudah login
     const token = localStorage.getItem("adminToken");
     const adminUser = localStorage.getItem("adminUser");
 
     if (!token || !adminUser) {
-      // Jika belum login, redirect ke halaman login
       window.location.href = "/";
       return;
     }
@@ -246,63 +336,94 @@ export default function Dashboard() {
     setIsLoading(false);
   }, []);
 
-  // Tampilkan loading saat mengecek autentikasi
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-nerissa-onyx">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="w-12 h-12 text-nerissa-teal animate-spin mx-auto mb-6" />
-          <p className="text-gray-400 font-display font-medium uppercase tracking-[0.3em] animate-pulse">Memverifikasi Sesi...</p>
+          <Loader2 className="w-12 h-12 text-zedd-violet animate-spin mx-auto mb-6" />
+          <p className="text-zedd-steel font-display font-medium uppercase tracking-[0.3em] animate-pulse">Memverifikasi Sesi...</p>
         </div>
       </div>
     );
   }
 
-  // Jika tidak terautentikasi, jangan render apapun (sudah redirect)
   if (!isAuthenticated) return null;
 
   return (
     <div className="space-y-10 animate-fade-in pb-12">
       {/* Welcome Header */}
-      <div className="relative overflow-hidden rounded-nerissa-lg bg-gradient-to-br from-nerissa-midnight to-nerissa-onyx border border-white/10 shadow-nerissa-lg p-1">
-        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-nerissa-teal/5 to-transparent"></div>
-        <div className="absolute -bottom-10 -right-10 text-[18rem] text-white/5 font-display select-none pointer-events-none">N</div>
+      <div className="relative overflow-hidden rounded-zedd-lg bg-white border border-zedd-silver/40 shadow-sm p-1">
+        {/* Spectrum Accent */}
+        <div className="absolute top-0 left-0 w-full h-1 spectrum-bar"></div>
+        <div className="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-zedd-violet/[0.03] to-transparent"></div>
 
         <div className="relative z-10 px-10 py-12 md:px-14 md:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
           <div className="max-w-xl text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-              <div className="h-px w-10 bg-nerissa-teal/40"></div>
-              <span className="text-[10px] font-black text-nerissa-teal uppercase tracking-[0.4em] leading-none">Status: Melodic</span>
+              <div className="h-px w-10 bg-zedd-violet/30"></div>
+              <span className="text-[10px] font-black text-zedd-violet uppercase tracking-[0.4em] leading-none">Status: Active</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter text-white uppercase italic">
-              Selamat Datang, Admin
+            <h1 className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter text-zedd-carbon">
+              Selamat Datang, <span className="text-spectrum">Admin</span>
             </h1>
-            <p className="text-gray-400 text-lg leading-relaxed max-w-lg font-medium tracking-tight">
-              Kelola data buku, peminjaman, dan anggota perpustakaan <span className="text-nerissa-teal">SMPN 3 Lumajang</span> dengan melodi efisiensi.
+            <p className="text-zedd-steel text-lg leading-relaxed max-w-lg font-medium tracking-tight">
+              Kelola data buku, peminjaman, dan anggota perpustakaan <span className="text-zedd-violet font-bold">SMPN 3 Lumajang</span> dengan efisien.
             </p>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-10">
-              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
-                <div className="w-2 h-2 bg-nerissa-teal rounded-full animate-pulse shadow-nerissa"></div>
-                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Resonance: Optimal</span>
+              <div className="flex items-center gap-3 bg-zedd-glass border border-zedd-silver/60 px-6 py-2 rounded-full group">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-bold text-zedd-steel uppercase tracking-widest">System: Online</span>
               </div>
-              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-2 rounded-full shadow-inner group">
-                <Sparkles className="w-4 h-4 text-nerissa-gold" />
-                <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Sync: 100%</span>
+              <div className="flex items-center gap-3 bg-zedd-glass border border-zedd-silver/60 px-6 py-2 rounded-full group">
+                <Sparkles className="w-4 h-4 text-zedd-violet" />
+                <span className="text-xs font-bold text-zedd-steel uppercase tracking-widest">Sync: 100%</span>
               </div>
             </div>
           </div>
 
           <div className="relative group/avatar">
-            <div className="absolute -inset-10 bg-nerissa-teal/10 rounded-full blur-[80px] opacity-0 group-hover/avatar:opacity-100 transition-opacity"></div>
-            <div className="w-40 h-40 md:w-56 md:h-56 bg-gradient-to-tr from-nerissa-midnight to-nerissa-onyx rounded-full flex items-center justify-center border-2 border-white/10 shadow-2xl relative overflow-hidden group-hover/avatar:scale-110 transition-transform duration-700">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')] opacity-30"></div>
-              <div className="relative">
-                <Mic2 className="w-20 h-20 text-nerissa-teal/40 group-hover/avatar:scale-125 group-hover/avatar:text-nerissa-teal transition-all duration-700" />
-              </div>
-              {/* Sound wave pulses around avatar */}
-              <div className="absolute inset-0 border-[10px] border-nerissa-teal/10 rounded-full animate-ping opacity-0 group-hover/avatar:opacity-100"></div>
-            </div>
+            <div className={`absolute -inset-10 rounded-full blur-[80px] transition-all duration-700 ${isEasterEggPlaying ? 'opacity-100 bg-zedd-violet/15' : 'opacity-0 bg-zedd-violet/5 group-hover/avatar:opacity-100'}`}></div>
+            <button
+              onClick={playSpectrumInspect}
+              title="✨ Easter Egg"
+              className={`w-40 h-40 md:w-56 md:h-56 rounded-full flex items-center justify-center border-2 shadow-card relative overflow-hidden transition-all duration-700 cursor-pointer focus:outline-none
+                ${isEasterEggPlaying
+                  ? 'bg-gradient-to-tr from-zedd-violet/15 to-zedd-blue/15 border-zedd-violet/40 scale-105 shadow-zedd-lg'
+                  : 'bg-gradient-to-tr from-zedd-violet/5 to-zedd-blue/5 border-zedd-silver/40 group-hover/avatar:scale-105'
+                }`}
+            >
+              <Zap className={`w-20 h-20 transition-all duration-500 ${isEasterEggPlaying ? 'text-zedd-violet scale-110 animate-pulse' : 'text-zedd-violet/20 group-hover/avatar:scale-125 group-hover/avatar:text-zedd-violet/40'}`} />
+
+              {/* Spectrum Ring Animation (visible when playing) */}
+              {isEasterEggPlaying && (
+                <>
+                  <div className="absolute inset-0 rounded-full" style={{
+                    background: 'conic-gradient(from 0deg, #8B5CF6, #3B82F6, #06B6D4, #EC4899, #8B5CF6)',
+                    WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 4px))',
+                    mask: 'radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 4px))',
+                    animation: 'spin 1.5s linear infinite',
+                  }}></div>
+                  <div className="absolute inset-3 rounded-full" style={{
+                    background: 'conic-gradient(from 180deg, #EC4899, #8B5CF6, #3B82F6, #06B6D4, #EC4899)',
+                    WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
+                    mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), #fff calc(100% - 2px))',
+                    animation: 'spin 2s linear infinite reverse',
+                    opacity: 0.6,
+                  }}></div>
+                  {/* Floating spectrum particles */}
+                  <div className="absolute w-2 h-2 bg-zedd-violet rounded-full animate-ping" style={{ top: '20%', left: '15%' }}></div>
+                  <div className="absolute w-1.5 h-1.5 bg-zedd-blue rounded-full animate-ping" style={{ top: '70%', right: '20%', animationDelay: '0.3s' }}></div>
+                  <div className="absolute w-2 h-2 bg-zedd-cyan rounded-full animate-ping" style={{ bottom: '15%', left: '40%', animationDelay: '0.6s' }}></div>
+                  <div className="absolute w-1.5 h-1.5 bg-zedd-pink rounded-full animate-ping" style={{ top: '30%', right: '10%', animationDelay: '0.9s' }}></div>
+                </>
+              )}
+
+              {/* Idle pulse ring */}
+              {!isEasterEggPlaying && (
+                <div className="absolute inset-0 border-[10px] border-zedd-violet/5 rounded-full animate-ping opacity-0 group-hover/avatar:opacity-100"></div>
+              )}
+            </button>
           </div>
         </div>
       </div>
@@ -313,7 +434,7 @@ export default function Dashboard() {
           icon={BookOpen}
           label="Total Koleksi Buku"
           value={stats.totalBooks}
-          color="blue"
+          color="violet"
           trend="+12 unit bulan ini"
         />
         <StatCard
@@ -326,28 +447,28 @@ export default function Dashboard() {
           icon={Users}
           label="Jumlah Siswa"
           value={stats.totalBorrowers}
-          color="purple"
+          color="blue"
           trend="85% aktif membaca"
         />
         <StatCard
           icon={Library}
           label="Sedang Dipinjam"
           value={stats.borrowedBooks}
-          color="orange"
+          color="amber"
         />
         <StatCard
-          icon={Music}
+          icon={Zap}
           label="Peminjaman Aktif"
           value={stats.activeLoansCount}
-          color="teal"
-          trend="Melodi Linkage"
+          color="cyan"
+          trend="Aktif"
         />
         <StatCard
           icon={AlertTriangle}
           label="Terlambat Kembali"
           value={stats.overdueCount}
           color="red"
-          trend="Cek Registry"
+          trend="Perlu perhatian"
         />
       </div>
 

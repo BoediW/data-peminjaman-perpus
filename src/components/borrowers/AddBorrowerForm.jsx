@@ -21,18 +21,9 @@ export default function AddBorrowerForm() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const classOptions = [
-    "7A",
-    "7B",
-    "7C",
-    "7D",
-    "8A",
-    "8B",
-    "8C",
-    "8D",
-    "9A",
-    "9B",
-    "9C",
-    "9D",
+    "7A", "7B", "7C", "7D", "7E", "7F", "7G", "7H",
+    "8A", "8B", "8C", "8D", "8E", "8F", "8G", "8H",
+    "9A", "9B", "9C", "9D", "9E", "9F", "9G", "9H",
   ];
 
   const handleInputChange = (e) => {
@@ -55,11 +46,7 @@ export default function AddBorrowerForm() {
       });
 
       setShowSuccess(true);
-      setFormData({
-        nisn: "",
-        nama_siswa: "",
-        kelas: "",
-      });
+      setFormData({ nisn: "", nama_siswa: "", kelas: "" });
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error("Failed to add borrower", error);
@@ -71,33 +58,29 @@ export default function AddBorrowerForm() {
 
   return (
     <div class="w-full animate-fade-in pb-10">
-      {/* Header */}
       <div class="mb-6">
         <h1 class="section-title">
-          <UserPlus class="w-7 h-7 text-primary-600" />
+          <UserPlus class="w-7 h-7 text-zedd-violet" />
           Tambah Siswa Baru
         </h1>
-        <p class="text-gray-500 -mt-4 ml-10">
+        <p class="text-zedd-steel -mt-4 ml-10">
           Daftarkan siswa baru sebagai anggota perpustakaan
         </p>
       </div>
 
-      {/* Success Alert */}
       {showSuccess && (
-        <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 animate-slide-up">
-          <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-          <p class="text-green-800 font-medium">
+        <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 animate-slide-up">
+          <CheckCircle class="w-5 h-5 text-emerald-600 flex-shrink-0" />
+          <p class="text-emerald-800 font-medium">
             Siswa berhasil didaftarkan!
           </p>
         </div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleSubmit} class="card p-6 space-y-6">
-        {/* NISN */}
         <div>
           <label class="label" for="nisn">
-            <Hash class="w-4 h-4 inline mr-2 text-gray-500" />
+            <Hash class="w-4 h-4 inline mr-2 text-zedd-steel" />
             NISN (Nomor Induk Siswa Nasional)
           </label>
           <input
@@ -112,10 +95,9 @@ export default function AddBorrowerForm() {
           />
         </div>
 
-        {/* Name */}
         <div>
           <label class="label" for="nama_siswa">
-            <User class="w-4 h-4 inline mr-2 text-gray-500" />
+            <User class="w-4 h-4 inline mr-2 text-zedd-steel" />
             Nama Lengkap
           </label>
           <input
@@ -130,7 +112,6 @@ export default function AddBorrowerForm() {
           />
         </div>
 
-        {/* Class */}
         <div>
           <Dropdown
             label="Kelas"
@@ -146,23 +127,19 @@ export default function AddBorrowerForm() {
           />
         </div>
 
-        {/* Info Card */}
-        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
-          <h4 class="font-medium text-blue-800 mb-2 flex items-center gap-2">
+        <div class="bg-zedd-violet/5 border border-zedd-violet/15 rounded-xl p-4">
+          <h4 class="font-medium text-zedd-violet mb-2 flex items-center gap-2">
             <GraduationCap class="w-5 h-5" />
             Informasi Pendaftaran
           </h4>
-          <ul class="text-sm text-blue-700 space-y-1">
-            <li>
-              • Pastikan NISN tidak duplikat dengan siswa yang sudah terdaftar
-            </li>
+          <ul class="text-sm text-zedd-steel space-y-1">
+            <li>• Pastikan NISN tidak duplikat dengan siswa yang sudah terdaftar</li>
             <li>• Nama yang dimasukkan akan ditampilkan di kartu anggota</li>
             <li>• Setelah terdaftar, siswa dapat langsung meminjam buku</li>
           </ul>
         </div>
 
-        {/* Form Actions */}
-        <div class="flex items-center gap-3 pt-4 border-t border-base-200">
+        <div class="flex items-center gap-3 pt-4 border-t border-zedd-silver/40">
           <button
             type="submit"
             disabled={isSubmitting}

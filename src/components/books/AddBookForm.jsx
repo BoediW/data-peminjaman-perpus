@@ -38,7 +38,6 @@ export default function AddBookForm() {
     setIsSubmitting(true);
 
     try {
-      // Map form data to match store's expected format
       await addBook({
         code: formData.kode_buku,
         title: formData.judul,
@@ -68,33 +67,29 @@ export default function AddBookForm() {
 
   return (
     <div class="w-full animate-fade-in pb-10">
-      {/* Header */}
       <div class="mb-6">
         <h1 class="section-title">
-          <BookPlus class="w-7 h-7 text-primary-600" />
+          <BookPlus class="w-7 h-7 text-zedd-violet" />
           Tambah Buku Baru
         </h1>
-        <p class="text-gray-500 -mt-4 ml-10">
+        <p class="text-zedd-steel -mt-4 ml-10">
           Lengkapi informasi buku untuk ditambahkan ke katalog
         </p>
       </div>
 
-      {/* Success Alert */}
       {showSuccess && (
-        <div class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 animate-slide-up">
-          <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0" />
-          <p class="text-green-800 font-medium">
+        <div class="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-center gap-3 animate-slide-up">
+          <CheckCircle class="w-5 h-5 text-emerald-600 flex-shrink-0" />
+          <p class="text-emerald-800 font-medium">
             Buku berhasil ditambahkan ke katalog!
           </p>
         </div>
       )}
 
-      {/* Form */}
       <form onSubmit={handleSubmit} class="card p-6 space-y-6">
-        {/* Book Code */}
         <div>
           <label class="label" for="kode_buku">
-            <Hash class="w-4 h-4 inline mr-2 text-gray-500" />
+            <Hash class="w-4 h-4 inline mr-2 text-zedd-steel" />
             Kode Buku
           </label>
           <input
@@ -107,15 +102,14 @@ export default function AddBookForm() {
             class="input font-mono"
             required
           />
-          <p class="text-xs text-gray-400 mt-1">
+          <p class="text-xs text-zedd-steel mt-1">
             Format: [KATEGORI]-[NOMOR], contoh: NOV-001 untuk Novel
           </p>
         </div>
 
-        {/* Book Title */}
         <div>
           <label class="label" for="judul">
-            <BookPlus class="w-4 h-4 inline mr-2 text-gray-500" />
+            <BookPlus class="w-4 h-4 inline mr-2 text-zedd-steel" />
             Judul Buku
           </label>
           <input
@@ -130,10 +124,9 @@ export default function AddBookForm() {
           />
         </div>
 
-        {/* Author */}
         <div>
           <label class="label" for="penulis">
-            <User class="w-4 h-4 inline mr-2 text-gray-500" />
+            <User class="w-4 h-4 inline mr-2 text-zedd-steel" />
             Penulis
           </label>
           <input
@@ -147,10 +140,9 @@ export default function AddBookForm() {
           />
         </div>
 
-        {/* Publisher */}
         <div>
           <label class="label" for="penerbit">
-            <Building2 class="w-4 h-4 inline mr-2 text-gray-500" />
+            <Building2 class="w-4 h-4 inline mr-2 text-zedd-steel" />
             Penerbit
           </label>
           <input
@@ -164,12 +156,10 @@ export default function AddBookForm() {
           />
         </div>
 
-        {/* Year & Stock Row */}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Year */}
           <div>
             <label class="label" for="tahun_terbit">
-              <Calendar class="w-4 h-4 inline mr-2 text-gray-500" />
+              <Calendar class="w-4 h-4 inline mr-2 text-zedd-steel" />
               Tahun Terbit
             </label>
             <input
@@ -184,10 +174,9 @@ export default function AddBookForm() {
             />
           </div>
 
-          {/* Stock */}
           <div>
             <label class="label" for="stok_total">
-              <Layers class="w-4 h-4 inline mr-2 text-gray-500" />
+              <Layers class="w-4 h-4 inline mr-2 text-zedd-steel" />
               Jumlah Stok
             </label>
             <input
@@ -203,29 +192,19 @@ export default function AddBookForm() {
           </div>
         </div>
 
-        {/* Info Card */}
-        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
-          <h4 class="font-medium text-blue-800 mb-2 flex items-center gap-2">
+        <div class="bg-zedd-violet/5 border border-zedd-violet/15 rounded-xl p-4">
+          <h4 class="font-medium text-zedd-violet mb-2 flex items-center gap-2">
             <BookPlus class="w-5 h-5" />
             Panduan Pengisian
           </h4>
-          <ul class="text-sm text-blue-700 space-y-1">
-            <li>
-              • <b>Kode Buku</b>: Gunakan format yang konsisten, contoh: NOV
-              untuk Novel, PLJ untuk Pelajaran
-            </li>
-            <li>
-              • <b>Penerbit</b>: Masukkan nama penerbit sesuai yang tertera di
-              buku
-            </li>
-            <li>
-              • Stok yang dimasukkan adalah jumlah total buku yang tersedia
-            </li>
+          <ul class="text-sm text-zedd-steel space-y-1">
+            <li>• <b>Kode Buku</b>: Gunakan format yang konsisten, contoh: NOV untuk Novel, PLJ untuk Pelajaran</li>
+            <li>• <b>Penerbit</b>: Masukkan nama penerbit sesuai yang tertera di buku</li>
+            <li>• Stok yang dimasukkan adalah jumlah total buku yang tersedia</li>
           </ul>
         </div>
 
-        {/* Form Actions */}
-        <div class="flex items-center gap-3 pt-4 border-t border-base-200">
+        <div class="flex items-center gap-3 pt-4 border-t border-zedd-silver/40">
           <button
             type="submit"
             disabled={isSubmitting}

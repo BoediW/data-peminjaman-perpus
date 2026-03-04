@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -10,10 +10,11 @@
   }
 
   body {
-    @apply bg-nerissa-onyx text-gray-200 font-sans antialiased overflow-x-hidden;
+    @apply bg-zedd-white text-zedd-carbon font-sans antialiased overflow-x-hidden;
     background-image:
-      radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(129, 140, 248, 0.05) 0%, transparent 40%);
+      radial-gradient(circle at 15% 25%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 85% 75%, rgba(6, 182, 212, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.02) 0%, transparent 60%);
     background-attachment: fixed;
   }
 
@@ -23,77 +24,94 @@
   h4,
   h5,
   h6 {
-    @apply font-display font-semibold text-white tracking-tight;
+    @apply font-display font-semibold text-zedd-carbon tracking-tight;
   }
 }
 
 @layer components {
 
-  /* Nerissa Card - Sleek and Glassy */
+  /* ============================
+     Zedd Spectrum Card
+     ============================ */
   .card {
-    @apply bg-nerissa-midnight/40 backdrop-blur-xl border border-white/10 rounded-nerissa-lg transition-all duration-300;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    @apply bg-white border border-zedd-silver/60 rounded-zedd-lg transition-all duration-300;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .card:hover {
-    @apply border-nerissa-teal/30 -translate-y-1;
-    box-shadow: 0 12px 40px -10px rgba(56, 189, 248, 0.15);
+    @apply border-zedd-violet/20 -translate-y-0.5;
+    box-shadow: 0 8px 30px rgba(139, 92, 246, 0.06), 0 2px 10px rgba(0, 0, 0, 0.03);
   }
 
-  /* Nerissa Button - Melodic Blue */
+  /* ============================
+     Buttons — Spectrum Glow
+     ============================ */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-display font-bold transition-all duration-300 cursor-pointer relative overflow-hidden;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-display font-bold transition-all duration-300 cursor-pointer relative overflow-hidden text-sm;
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-nerissa-teal to-nerissa-purple text-nerissa-onyx hover:shadow-nerissa active:scale-95;
+    background: linear-gradient(135deg, #8B5CF6, #6366F1, #3B82F6);
+    background-size: 200% 200%;
+    animation: spectrumShift 4s ease-in-out infinite;
+    @apply text-white hover:shadow-zedd active:scale-95;
   }
 
   .btn-accent {
-    @apply bg-white/10 border border-white/20 text-white hover:bg-white/20 active:scale-95;
+    @apply bg-zedd-violet/5 border border-zedd-violet/20 text-zedd-violet hover:bg-zedd-violet/10 active:scale-95;
   }
 
   .btn-outline {
-    @apply border-2 border-nerissa-teal text-nerissa-teal hover:bg-nerissa-teal hover:text-nerissa-onyx;
+    @apply border-2 border-zedd-violet/40 text-zedd-violet hover:bg-zedd-violet hover:text-white hover:border-zedd-violet;
   }
 
   .btn-ghost {
-    @apply text-nerissa-teal/70 hover:bg-white/5 hover:text-nerissa-teal;
+    @apply text-zedd-steel hover:bg-zedd-glass hover:text-zedd-violet;
   }
 
-  /* Input - Dark and Elegant */
+  .btn-sm {
+    @apply px-4 py-1.5 text-xs;
+  }
+
+  /* ============================
+     Input — Clean Frosted
+     ============================ */
   .input {
-    @apply w-full px-5 py-3 rounded-nerissa border border-white/10 bg-nerissa-onyx/50 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-nerissa-teal/50 focus:border-nerissa-teal transition-all duration-300;
+    @apply w-full px-5 py-3 rounded-zedd border border-zedd-silver/80 bg-white text-zedd-carbon placeholder:text-zedd-steel/60 focus:outline-none focus:ring-2 focus:ring-zedd-violet/20 focus:border-zedd-violet/50 transition-all duration-300;
   }
 
   .label {
-    @apply block text-xs font-bold text-nerissa-teal/80 mb-2 uppercase tracking-widest;
+    @apply block text-xs font-bold text-zedd-violet/70 mb-2 uppercase tracking-widest;
   }
 
-  /* Badge Styles - Radiant Glow */
+  /* ============================
+     Badge — Prismatic Tags
+     ============================ */
   .badge {
     @apply inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest;
   }
 
   .badge-success {
-    @apply bg-nerissa-teal/10 text-nerissa-teal border border-nerissa-teal/20;
+    @apply bg-emerald-50 text-emerald-600 border border-emerald-200;
   }
 
   .badge-warning {
-    @apply bg-nerissa-gold/10 text-nerissa-gold border border-nerissa-gold/20;
+    @apply bg-amber-50 text-amber-600 border border-amber-200;
   }
 
   .badge-danger {
-    @apply bg-red-500/10 text-red-400 border border-red-500/20;
+    @apply bg-red-50 text-red-500 border border-red-200;
   }
 
   .badge-info {
-    @apply bg-nerissa-purple/10 text-nerissa-purple border border-nerissa-purple/20;
+    @apply bg-zedd-violet/5 text-zedd-violet border border-zedd-violet/15;
   }
 
-  /* Table Style - Modern and Clean */
+  /* ============================
+     Table — Spectrum Lines
+     ============================ */
   .table-container {
-    @apply overflow-hidden rounded-nerissa border border-white/5 bg-nerissa-midnight/20 backdrop-blur-md;
+    @apply overflow-hidden rounded-zedd border border-zedd-silver/60 bg-white;
   }
 
   .table {
@@ -101,47 +119,69 @@
   }
 
   .table th {
-    @apply px-6 py-4 text-left text-xs font-bold text-nerissa-teal/60 uppercase tracking-widest border-b border-white/5;
+    @apply px-6 py-4 text-left text-xs font-bold text-zedd-violet/50 uppercase tracking-widest border-b border-zedd-silver/50 bg-zedd-glass/50;
   }
 
   .table td {
-    @apply px-6 py-4 text-sm text-gray-400 border-b border-white/5;
+    @apply px-6 py-4 text-sm text-zedd-steel border-b border-zedd-silver/30;
   }
 
   .table tr:hover td {
-    @apply bg-white/5 text-white transition-colors;
+    @apply bg-zedd-violet/[0.02] text-zedd-carbon transition-colors;
   }
 
-  /* Navigation Item Style */
+  /* ============================
+     Navigation
+     ============================ */
   .nav-item {
-    @apply flex items-center gap-4 px-6 py-3.5 rounded-nerissa text-gray-400 hover:bg-white/5 hover:text-nerissa-teal transition-all duration-300 cursor-pointer font-bold;
+    @apply flex items-center gap-4 px-6 py-3.5 rounded-zedd text-zedd-steel hover:bg-zedd-violet/5 hover:text-zedd-violet transition-all duration-300 cursor-pointer font-bold;
   }
 
   .nav-item.active {
-    @apply bg-nerissa-teal/10 text-white border-l-4 border-nerissa-teal font-black;
+    @apply bg-zedd-violet/10 text-zedd-violet border-l-4 border-zedd-violet font-black;
   }
 
-  /* Section Title Style */
+  /* ============================
+     Section Title
+     ============================ */
   .section-title {
-    @apply text-3xl font-display font-black text-white mb-8 flex items-center gap-4;
+    @apply text-3xl font-display font-black text-zedd-carbon mb-8 flex items-center gap-4;
+  }
+
+  /* ============================
+     Modal
+     ============================ */
+  .modal-content {
+    @apply bg-white border border-zedd-silver/60 rounded-zedd-lg w-full max-w-lg shadow-zedd-lg;
   }
 }
 
 @layer utilities {
   .glass-nav {
-    @apply bg-nerissa-midnight/60 backdrop-blur-2xl border-b border-white/10;
+    @apply bg-white/70 backdrop-blur-2xl border-b border-zedd-silver/40;
   }
 
-  .sound-wave {
-    background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(56, 189, 248, 0.1) 2px, rgba(56, 189, 248, 0.1) 4px);
+  /* Spectrum bar */
+  .spectrum-bar {
+    background: linear-gradient(90deg, #8B5CF6, #3B82F6, #06B6D4, #EC4899, #8B5CF6);
+    background-size: 200% 100%;
+    animation: spectrumShift 4s ease-in-out infinite;
+  }
+
+  /* Spectrum text gradient */
+  .text-spectrum {
+    background: linear-gradient(135deg, #8B5CF6, #3B82F6, #06B6D4, #EC4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
-/* Animations Controls */
+/* Animations */
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
-.animate-pulse-cyan {
-  animation: pulseCyan 2s infinite;
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite;
 }

@@ -34,7 +34,7 @@ export default function App() {
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div
-          class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden animate-fade-in"
+          class="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm lg:hidden animate-fade-in"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}

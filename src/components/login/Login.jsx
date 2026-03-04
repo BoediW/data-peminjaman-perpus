@@ -1,5 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
-import { User, Lock, Eye, EyeOff, AlertTriangle, Music, Mic2, Disc } from "lucide-preact";
+import { User, Lock, Eye, EyeOff, AlertTriangle, Zap, Sparkles, Disc } from "lucide-preact";
 
 function LoginForm() {
   const [username, setUsername] = useState("");
@@ -51,9 +51,7 @@ function LoginForm() {
     try {
       const response = await fetch("/api/admin/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: sanitizedUsername,
           password: sanitizedPassword,
@@ -91,37 +89,41 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-nerissa-onyx px-4 py-12 relative overflow-hidden">
-      {/* Melodic Background Elements */}
+    <div className="min-h-screen w-full flex items-center justify-center bg-zedd-white px-4 py-12 relative overflow-hidden">
+      {/* Spectrum Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-10 right-10 w-96 h-96 bg-nerissa-teal/10 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-nerissa-purple/10 rounded-full blur-[120px]"></div>
+        <div className="absolute top-20 right-20 w-[500px] h-[500px] bg-zedd-violet/[0.06] rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-20 left-20 w-[400px] h-[400px] bg-zedd-cyan/[0.05] rounded-full blur-[100px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-zedd-pink/[0.03] rounded-full blur-[120px]"></div>
 
-        {/* Sound Waves Decoration */}
-        <div className="absolute bottom-0 left-0 w-full h-1/3 opacity-20 sound-wave"></div>
+        {/* Spectrum Grid Lines */}
+        <div className="absolute inset-0 opacity-[0.015]" style={{
+          backgroundImage: "linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)",
+          backgroundSize: "60px 60px"
+        }}></div>
 
-        {/* Decorative Icons */}
-        <div className="absolute top-1/4 left-10 text-nerissa-teal/20 animate-float">
-          <Music size={120} />
+        {/* Floating Decorative */}
+        <div className="absolute top-1/4 left-16 text-zedd-violet/10 animate-float">
+          <Sparkles size={100} />
         </div>
-        <div className="absolute bottom-1/4 right-10 text-nerissa-purple/20 animate-float" style={{ animationDelay: '1s' }}>
-          <Disc size={100} />
+        <div className="absolute bottom-1/4 right-16 text-zedd-cyan/10 animate-float" style={{ animationDelay: "1s" }}>
+          <Disc size={80} />
         </div>
       </div>
 
       <div className="max-w-md w-full relative z-10 animate-fade-in px-4">
-        <div className="card-cyber bg-nerissa-midnight/60 backdrop-blur-2xl p-8 md:p-10 border border-white/10 rounded-nerissa-lg shadow-nerissa-lg relative overflow-hidden">
-          {/* Accent Line */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-nerissa-teal via-nerissa-purple to-nerissa-teal"></div>
+        <div className="bg-white/80 backdrop-blur-2xl p-8 md:p-10 border border-zedd-silver/60 rounded-zedd-lg shadow-zedd-lg relative overflow-hidden">
+          {/* Spectrum Top Bar */}
+          <div className="absolute top-0 left-0 w-full h-1 spectrum-bar"></div>
 
           <div className="text-center mb-10">
-            <div className="w-24 h-24 bg-gradient-to-tr from-nerissa-teal/20 to-nerissa-purple/20 border border-nerissa-teal/30 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse-cyan">
-              <Mic2 className="w-10 h-10 text-nerissa-teal" />
+            <div className="w-24 h-24 bg-gradient-to-tr from-zedd-violet/10 to-zedd-cyan/10 border border-zedd-violet/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner animate-pulse-glow">
+              <Zap className="w-10 h-10 text-zedd-violet" />
             </div>
-            <h1 className="text-3xl font-display font-black text-white mb-2 tracking-tight italic">
+            <h1 className="text-3xl font-display font-black text-zedd-carbon mb-2 tracking-tight">
               Selamat Datang
             </h1>
-            <p className="text-gray-400 text-xs font-medium uppercase tracking-[0.2em]">
+            <p className="text-zedd-steel text-xs font-medium uppercase tracking-[0.2em]">
               Sistem Manajemen Perpustakaan
             </p>
           </div>
@@ -130,7 +132,7 @@ function LoginForm() {
             <div className="space-y-1">
               <label className="label">Username</label>
               <div className="relative group">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-nerissa-teal transition-colors w-5 h-5" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zedd-steel group-focus-within:text-zedd-violet transition-colors w-5 h-5" />
                 <input
                   type="text"
                   id="username"
@@ -146,7 +148,7 @@ function LoginForm() {
             <div className="space-y-1">
               <label className="label">Kata Sandi</label>
               <div className="relative group">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-nerissa-teal transition-colors w-5 h-5" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zedd-steel group-focus-within:text-zedd-violet transition-colors w-5 h-5" />
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
@@ -159,7 +161,7 @@ function LoginForm() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zedd-steel hover:text-zedd-violet transition-colors"
                 >
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
@@ -175,39 +177,38 @@ function LoginForm() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-10 h-5 bg-white/10 rounded-full peer peer-checked:bg-nerissa-teal transition-all"></div>
-                  <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-5"></div>
+                  <div className="w-10 h-5 bg-zedd-silver rounded-full peer peer-checked:bg-zedd-violet transition-all"></div>
+                  <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-5 shadow-sm"></div>
                 </div>
-                <span className="text-sm text-gray-400 group-hover:text-gray-200">Ingat saya</span>
+                <span className="text-sm text-zedd-steel group-hover:text-zedd-carbon">Ingat saya</span>
               </label>
             </div>
 
             <button
               type="submit"
-              className="btn btn-primary w-full h-14 text-sm tracking-widest uppercase shadow-nerissa hover:scale-[1.02] active:scale-95 group overflow-hidden"
+              className="btn btn-primary w-full h-14 text-sm tracking-widest uppercase group overflow-hidden"
             >
-              <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-0 transition-transform"></div>
               <span className="relative z-10 flex items-center gap-3">
-                Masuk <Music size={18} className="animate-bounce" />
+                Masuk <Zap size={18} />
               </span>
             </button>
           </form>
 
-          <p className="mt-8 text-center text-xs text-gray-500 font-medium">
-            ID: <span className="text-nerissa-teal/60">SMP Negeri 3 Archive</span>
+          <p className="mt-8 text-center text-xs text-zedd-steel font-medium">
+            ID: <span className="text-spectrum font-bold">SMP Negeri 3 Archive</span>
           </p>
         </div>
       </div>
 
-      {/* Snackbar Alert */}
+      {/* Snackbar */}
       <div
-        className={`fixed top-8 left-1/2 -translate-x-1/2 transition-all duration-500 z-50 px-8 py-4 rounded-full border shadow-nerissa-lg flex items-center gap-4
+        className={`fixed top-8 left-1/2 -translate-x-1/2 transition-all duration-500 z-50 px-8 py-4 rounded-full border shadow-zedd-lg flex items-center gap-4
         ${snackbarVisible ? "translate-y-0 opacity-100 scale-100" : "-translate-y-12 opacity-0 scale-95 pointer-events-none"}
         ${snackbar?.type === "success"
-            ? "bg-nerissa-teal text-nerissa-onyx border-white/20"
-            : "bg-red-500/90 text-white border-white/20"}`}
+            ? "bg-white text-emerald-600 border-emerald-200"
+            : "bg-white text-red-500 border-red-200"}`}
       >
-        {snackbar?.type === "error" ? <AlertTriangle size={20} /> : <div className="w-5 h-5 flex-shrink-0"><Mic2 size={20} /></div>}
+        {snackbar?.type === "error" ? <AlertTriangle size={20} /> : <Zap size={20} />}
         <p className="font-display font-bold text-sm">{snackbar?.message}</p>
       </div>
     </div>

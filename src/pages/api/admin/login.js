@@ -17,9 +17,7 @@ export const POST = async ({ request }) => {
         }),
         {
           status: 200,
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         },
       );
     }
@@ -28,17 +26,13 @@ export const POST = async ({ request }) => {
       JSON.stringify({ error: "Username atau password salah" }),
       {
         status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       },
     );
   } catch (error) {
     return new Response(JSON.stringify({ error: "Server error" }), {
       status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   }
 };
